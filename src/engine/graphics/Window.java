@@ -7,14 +7,17 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import engine.core.Logger;
+import engine.world.Camera;
 
 public class Window {
 	private long window;
-	private int width, height;
+	public int width;
+	public int height;
 	private String title;
 	private boolean fullscreen;
 	
@@ -24,7 +27,7 @@ public class Window {
 		this.title = title;
 	}
 	
-	public boolean create() {
+	public boolean create(Camera camera) {
 		if (!GLFW.glfwInit()) {
 			Logger.error("Failed to create window !");
 			return false;
@@ -35,12 +38,23 @@ public class Window {
 		centerWindow();
 		GLFW.glfwMakeContextCurrent(window);
 		GL.createCapabilities();
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		Renderer.updateViewport(width, height);
+		float worldW = width / Renderer.ZOOM;
+		float worldH = height / Renderer.ZOOM;
+		camera.width = worldW;
+		camera.height = worldH;
 		GLFW.glfwShowWindow(window);
 
 		// resize callback
 		GLFW.glfwSetFramebufferSizeCallback(window, (w, width, height) -> {
 		    Renderer.updateViewport(width, height);
+
+		    float worldWbis = width / Renderer.ZOOM;
+		    float worldHbis = height / Renderer.ZOOM;
+		    camera.width = worldWbis;
+		    camera.height = worldHbis;
 		});
 
 		Logger.info("Window created successfully");

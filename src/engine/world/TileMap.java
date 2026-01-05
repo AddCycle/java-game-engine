@@ -37,8 +37,8 @@ public class TileMap {
 		float camX = 0;
 		float camY = 0;
 		if (camera != null) {
-			camX = camera.posX();
-			camY = camera.posY();
+			camX = camera.x;
+			camY = camera.y;
 		}
 
 		for (int y = 0; y < map.length; y++) {

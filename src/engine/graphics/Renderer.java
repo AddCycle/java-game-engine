@@ -15,7 +15,7 @@ import engine.loader.TextureLoader;
 
 public class Renderer {
 	private TextureLoader textureLoader;
-	public static float ZOOM = 16.0f; // 2x, 3x, 0.75f, etc.
+	public static float ZOOM = 4.0f; // 2x, 3x, 0.75f, etc.
 
 	public Renderer(TextureLoader texLoader) {
 		this.textureLoader = texLoader;

@@ -4,18 +4,20 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.core.Engine;
 import engine.core.Game;
+import engine.entities.EntityManager;
+import engine.entities.Player2D;
 import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.world.Camera;
 import engine.world.TileMap;
-import inputs.InputTesting;
 
 public class NamelessAdventure implements Game {
 	private Engine engine;
 	private TileMap tilemap;
+	private EntityManager entityManager;
+	private Player2D player;
 	private int[] textures;
-	private Camera camera;
 	
 	public NamelessAdventure(Engine engine) {
 		this.engine = engine;
@@ -23,6 +25,8 @@ public class NamelessAdventure implements Game {
 
 	@Override
 	public void init() {
+		entityManager = new EntityManager(engine.getCamera());
+
 		textures = new int[2];
 		textures[0] = engine.getRenderer().loadTexture("resources/grass.png");
 		textures[1] = engine.getRenderer().loadTexture("resources/water.png");
@@ -34,7 +38,13 @@ public class NamelessAdventure implements Game {
 				{1, 1, 1, 0}
 		};
 		tilemap = new TileMap(tiles, textures, 16);
-		camera = new Camera();
+
+		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
+	    player = new Player2D(engine.getInput(), 32, 32, playerTex);
+
+	    engine.getCamera().setFollowEntity(player);
+
+	    entityManager.add(player);
 	}
 
 	@Override
@@ -46,31 +56,20 @@ public class NamelessAdventure implements Game {
 		if (input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
 			engine.stop();
 		}
-		
-		if (input.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-			camera.x -= 5 * dt;
-		}
-		else if (input.isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
-			camera.x += 5 * dt;
-		}
-
-		if (input.isKeyDown(GLFW.GLFW_KEY_UP)) {
-			camera.y -= 5 * dt;
-		}
-		else if (input.isKeyDown(GLFW.GLFW_KEY_DOWN)) {
-			camera.y += 5 * dt;
-		}
 
 		if (input.isKeyJustPressed(GLFW.GLFW_KEY_F11)) {
 			Window window = engine.getWindow();
 			window.setFullScreen(!window.isFullscreen());
 		}
+		
+		entityManager.update(dt);
 	}
 
 	@Override
 	public void render() {
 		Renderer renderer = engine.getRenderer();
 		int scale = 8;
-		tilemap.render(renderer, scale, camera);
+		tilemap.render(renderer, scale, engine.getCamera());
+		entityManager.render(engine.getRenderer());
 	}
 }

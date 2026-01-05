@@ -7,12 +7,14 @@ import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
+import engine.world.Camera;
 
 public class Engine {
 	private Window window;
 	private Inputs inputs;
 	private Loader loader;
 	private Renderer renderer;
+	private Camera camera;
 
 	private Game game;
 	
@@ -28,6 +30,7 @@ public class Engine {
 		window = new Window(builder.width, builder.height, builder.title);
 		loader = new Loader();
 		renderer = new Renderer(loader.getTextureLoader());
+		camera = new Camera(window.width, window.height);
 	}
 	
 	public void setGame(Game game) {
@@ -35,7 +38,7 @@ public class Engine {
 	}
 	
 	public void run() {
-		window.create();
+		window.create(camera);
 		window.setIcon("resources/icon.png");
 		
 		if (vsync) window.enableVSync();
@@ -57,6 +60,7 @@ public class Engine {
             inputs.update();
             window.pollEvents();
 
+            camera.update(dt);
             game.update(dt);
 
             game.render();
@@ -118,5 +122,9 @@ public class Engine {
 
 	public Window getWindow() {
 		return window;
+	}
+
+	public Camera getCamera() {
+		return camera;
 	}
 }
