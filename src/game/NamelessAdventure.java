@@ -29,7 +29,7 @@ public class NamelessAdventure implements Game {
 			engine.stop();
 		}
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_F11)) {
+		if (input.isKeyJustPressed(GLFW.GLFW_KEY_K)) {
 			Window window = engine.getWindow();
 			window.setFullScreen(!window.isFullscreen());
 		}

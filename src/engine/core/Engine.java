@@ -44,11 +44,15 @@ public class Engine {
 		game.init();
 		
 		while (!window.shouldClose()) {
-			float dt = 0.016f;
+            float dt = 0.016f;
+
+            inputs.update();
+            window.pollEvents();
+
             game.update(dt);
+
             game.render();
             window.swapBuffers();
-            window.pollEvents();
 		}
 		
 		cleanUp();

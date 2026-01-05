@@ -100,7 +100,8 @@ public class Window {
 			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
 			fullscreen = true;
 		} else {
-			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, width, height, mode.refreshRate());
+			GLFW.glfwSetWindowMonitor(window, 0, 0, 0, width, height, mode.refreshRate());
+			centerWindow();
 			fullscreen = false;
 		}
 	}

@@ -26,7 +26,6 @@ public class Inputs {
 	private long window;
 
 	private boolean[] prevKeys = new boolean[GLFW.GLFW_KEY_LAST];
-	private boolean[] prevMouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 
@@ -41,6 +40,11 @@ public class Inputs {
 	public Inputs(long window) {
 		this.window = window;
 
+		setCallbacks();
+	}
+	
+	public void setCallbacks() {
+
 		GLFW.glfwSetJoystickCallback((jid, event) -> {
 			if (event == GLFW.GLFW_CONNECTED) {
 				Logger.info("Joystick connected : %d", jid);
@@ -52,14 +56,13 @@ public class Inputs {
 		// keyboard
 		GLFW.glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
 			if (key != GLFW.GLFW_KEY_UNKNOWN && key >= 0 && key < keys.length) {
-				keys[key] = action != GLFW.GLFW_RELEASE;
-				if (!Engine.debug())
-					return;
 				String keyName = KEY_NAMES.getOrDefault(key, GLFW.glfwGetKeyName(key, scancode));
 				if (action == GLFW.GLFW_PRESS) {
-					Logger.info(String.format("key pressed : %s", keyName));
+					if (Engine.debug()) Logger.info(String.format("key pressed : %s", keyName));
+					keys[key] = true;
 				} else {
-					Logger.info(String.format("key released : %s", keyName));
+					if (Engine.debug()) Logger.info(String.format("key released : %s", keyName));
+					keys[key] = false;
 				}
 			}
 		});
@@ -85,22 +88,24 @@ public class Inputs {
 		});
 	}
 
+	public void update() {
+	    for (int i = 0; i < keys.length; i++) {
+	        prevKeys[i] = keys[i]; // store state for next frame
+	    }
+	}
+
 	// Keyboard query
 	public boolean isKeyDown(int key) {
 		return keys[key];
 	}
 
 	public boolean isKeyJustPressed(int key) {
-	    return keys[key] && !prevKeys[key];
+		return keys[key] && !prevKeys[key];
 	}
 
 	// Mouse query
 	public boolean isMouseButtonDown(int button) {
 		return mouseButtons[button];
-	}
-
-	public boolean isMouseButtonJustPressed(int button) {
-	    return mouseButtons[button] && !prevMouseButtons[button];
 	}
 
 	public double getMouseX() {
