@@ -35,7 +35,8 @@ public class Inputs {
 			Map.entry(GLFW_KEY_DOWN, "DOWN"), Map.entry(GLFW_KEY_LEFT, "LEFT"), Map.entry(GLFW_KEY_RIGHT, "RIGHT"),
 			Map.entry(GLFW_KEY_LEFT_SHIFT, "L_SHIFT"), Map.entry(GLFW_KEY_RIGHT_SHIFT, "R_SHIFT"),
 			Map.entry(GLFW_KEY_TAB, "TAB"), Map.entry(GLFW_KEY_ENTER, "ENTER"),
-			Map.entry(GLFW_KEY_BACKSPACE, "BACKSPACE"), Map.entry(GLFW.GLFW_KEY_SPACE, "SPACE"));
+			Map.entry(GLFW_KEY_BACKSPACE, "BACKSPACE"), Map.entry(GLFW.GLFW_KEY_SPACE, "SPACE"),
+			Map.entry(GLFW.GLFW_KEY_ESCAPE, "ESCAPE"));
 
 	public Inputs(long window) {
 		this.window = window;
@@ -57,12 +58,11 @@ public class Inputs {
 		GLFW.glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
 			if (key != GLFW.GLFW_KEY_UNKNOWN && key >= 0 && key < keys.length) {
 				String keyName = KEY_NAMES.getOrDefault(key, GLFW.glfwGetKeyName(key, scancode));
+				keys[key] = action != GLFW.GLFW_RELEASE;
 				if (action == GLFW.GLFW_PRESS) {
 					if (Engine.debug()) Logger.info(String.format("key pressed : %s", keyName));
-					keys[key] = true;
-				} else {
+				} else if (action == GLFW.GLFW_RELEASE) {
 					if (Engine.debug()) Logger.info(String.format("key released : %s", keyName));
-					keys[key] = false;
 				}
 			}
 		});
@@ -75,7 +75,7 @@ public class Inputs {
 					return;
 				if (action == GLFW.GLFW_PRESS) {
 					Logger.info(String.format("mouse button pressed : %d", button));
-				} else {
+				} else if (action == GLFW.GLFW_RELEASE) {
 					Logger.info(String.format("mouse button released : %d", button));
 				}
 			}

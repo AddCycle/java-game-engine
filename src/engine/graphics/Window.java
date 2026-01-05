@@ -35,7 +35,13 @@ public class Window {
 		centerWindow();
 		GLFW.glfwMakeContextCurrent(window);
 		GL.createCapabilities();
+		Renderer.updateViewport(width, height);
 		GLFW.glfwShowWindow(window);
+
+		// resize callback
+		GLFW.glfwSetFramebufferSizeCallback(window, (w, width, height) -> {
+		    Renderer.updateViewport(width, height);
+		});
 
 		Logger.info("Window created successfully");
 		
@@ -98,9 +104,11 @@ public class Window {
 		GLFWVidMode mode = GLFW.glfwGetVideoMode(monitor);
 		if (b) {
 			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+			Renderer.updateViewport(mode.width(), mode.height());
 			fullscreen = true;
 		} else {
 			GLFW.glfwSetWindowMonitor(window, 0, 0, 0, width, height, mode.refreshRate());
+			Renderer.updateViewport(width, height);
 			centerWindow();
 			fullscreen = false;
 		}

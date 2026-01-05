@@ -1,10 +1,12 @@
 package engine.core;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+
 import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
-import engine.loader.TextureLoader;
 
 public class Engine {
 	private Window window;
@@ -43,8 +45,14 @@ public class Engine {
 
 		game.init();
 		
+		double lastTime = GLFW.glfwGetTime();
+		
 		while (!window.shouldClose()) {
-            float dt = 0.016f;
+			double currentTime = GLFW.glfwGetTime();
+		    float dt = (float)(currentTime - lastTime);
+		    lastTime = currentTime;
+
+		    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
             inputs.update();
             window.pollEvents();

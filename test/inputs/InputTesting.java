@@ -4,15 +4,11 @@ import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
 
 import org.lwjgl.glfw.GLFW;
 
-import engine.core.Engine;
 import engine.core.Logger;
 import engine.inputs.Inputs;
 
 public class InputTesting {
-	public void test1(Engine engine) {
-
-		Inputs input = engine.getInput();
-		
+	public static void test1(Inputs input) {
 		if (input.isControllerButtonDown(GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
 			Logger.info("pressed left");
 		}
