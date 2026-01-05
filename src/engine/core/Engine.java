@@ -1,11 +1,16 @@
 package engine.core;
 
+import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
+import engine.loader.Loader;
+import engine.loader.TextureLoader;
 
 public class Engine {
 	private Window window;
 	private Inputs inputs;
+	private Loader loader;
+	private Renderer renderer;
 
 	private Game game;
 	
@@ -19,6 +24,8 @@ public class Engine {
         this.debug = builder.debug;
 
 		window = new Window(builder.width, builder.height, builder.title);
+		loader = new Loader();
+		renderer = new Renderer(loader.getTextureLoader());
 	}
 	
 	public void setGame(Game game) {
@@ -27,6 +34,7 @@ public class Engine {
 	
 	public void run() {
 		window.create();
+		window.setIcon("resources/icon.png");
 		
 		if (vsync) window.enableVSync();
 		if (fullscreen) window.setFullScreen(true);
@@ -42,6 +50,13 @@ public class Engine {
             window.swapBuffers();
             window.pollEvents();
 		}
+		
+		cleanUp();
+	}
+	
+	private void cleanUp() {
+		window.destroy();
+		loader.destroy();
 	}
 	
 	@SuppressWarnings("unused")
@@ -75,5 +90,21 @@ public class Engine {
 
 	public Inputs getInput() {
 		return inputs;
+	}
+
+	public Loader getLoader() {
+		return loader;
+	}
+	
+	public void stop() {
+		window.close();
+	}
+
+	public Renderer getRenderer() {
+		return renderer;
+	}
+
+	public Window getWindow() {
+		return window;
 	}
 }

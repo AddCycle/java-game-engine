@@ -17,6 +17,7 @@ import java.nio.FloatBuffer;
 import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWGamepadState;
 
 import engine.core.Engine;
 import engine.core.Logger;
@@ -24,6 +25,8 @@ import engine.core.Logger;
 public class Inputs {
 	private long window;
 
+	private boolean[] prevKeys = new boolean[GLFW.GLFW_KEY_LAST];
+	private boolean[] prevMouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 
@@ -40,9 +43,9 @@ public class Inputs {
 
 		GLFW.glfwSetJoystickCallback((jid, event) -> {
 			if (event == GLFW.GLFW_CONNECTED) {
-				Logger.info("Joystick connected");
+				Logger.info("Joystick connected : %d", jid);
 			} else if (event == GLFW.GLFW_DISCONNECTED) {
-				Logger.info("Joystick" + " connected");
+				Logger.info("Joystick disconnected : %d", jid);
 			}
 		});
 
@@ -80,7 +83,6 @@ public class Inputs {
 			mouseX = xpos;
 			mouseY = ypos;
 		});
-
 	}
 
 	// Keyboard query
@@ -88,9 +90,17 @@ public class Inputs {
 		return keys[key];
 	}
 
+	public boolean isKeyJustPressed(int key) {
+	    return keys[key] && !prevKeys[key];
+	}
+
 	// Mouse query
 	public boolean isMouseButtonDown(int button) {
 		return mouseButtons[button];
+	}
+
+	public boolean isMouseButtonJustPressed(int button) {
+	    return mouseButtons[button] && !prevMouseButtons[button];
 	}
 
 	public double getMouseX() {
@@ -104,9 +114,15 @@ public class Inputs {
 	// Poll gamepads/controllers
 	public boolean isControllerButtonDown(int jid, int button) {
 		if (glfwJoystickPresent(jid)) {
-			ByteBuffer buttons = glfwGetJoystickButtons(jid);
-			if (buttons != null && button < buttons.limit()) {
-				return buttons.get(button) == GLFW.GLFW_PRESS;
+			GLFWGamepadState state = GLFWGamepadState.create();
+			if (GLFW.glfwJoystickIsGamepad(jid)) {
+				GLFW.glfwGetGamepadState(jid, state);
+				return state.buttons(button) == GLFW.GLFW_PRESS;
+			} else {
+				ByteBuffer buttons = glfwGetJoystickButtons(jid);
+				if (buttons != null && button < buttons.limit()) {
+					return buttons.get(button) == GLFW.GLFW_PRESS;
+				}
 			}
 		}
 		return false;
@@ -114,6 +130,11 @@ public class Inputs {
 
 	public float getControllerAxis(int jid, int axis) {
 		if (glfwJoystickPresent(jid)) {
+			GLFWGamepadState state = GLFWGamepadState.create();
+			if (GLFW.glfwJoystickIsGamepad(jid)) {
+				GLFW.glfwGetGamepadState(jid, state);
+				return state.axes(axis);
+			}
 			FloatBuffer axes = GLFW.glfwGetJoystickAxes(jid);
 			if (axes != null && axis < axes.limit()) {
 				return axes.get(axis);

@@ -1,8 +1,14 @@
 package engine.graphics;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
 import engine.core.Logger;
 
@@ -10,6 +16,7 @@ public class Window {
 	private long window;
 	private int width, height;
 	private String title;
+	private boolean fullscreen;
 	
 	public Window(int width, int height, String title) {
 		this.width = width;
@@ -33,6 +40,26 @@ public class Window {
 		Logger.info("Window created successfully");
 		
 		return true;
+	}
+	
+	public void setIcon(String path) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+		    IntBuffer w = stack.mallocInt(1);
+		    IntBuffer h = stack.mallocInt(1);
+		    IntBuffer comp = stack.mallocInt(1);
+
+		    ByteBuffer pixels = STBImage.stbi_load(path, w, h, comp, 4);
+		    if (pixels == null) {
+		        System.out.println("Failed to load icon: " + STBImage.stbi_failure_reason());
+		    } else {
+		        GLFWImage.Buffer icon = GLFWImage.malloc(1, stack);
+		        icon.width(w.get(0));
+		        icon.height(h.get(0));
+		        icon.pixels(pixels);
+		        GLFW.glfwSetWindowIcon(window, icon);
+		        STBImage.stbi_image_free(pixels);
+		    }
+		}
 	}
 	
 	public boolean shouldClose() {
@@ -71,8 +98,10 @@ public class Window {
 		GLFWVidMode mode = GLFW.glfwGetVideoMode(monitor);
 		if (b) {
 			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+			fullscreen = true;
 		} else {
 			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, width, height, mode.refreshRate());
+			fullscreen = false;
 		}
 	}
 	
@@ -82,5 +111,13 @@ public class Window {
 
 	public long getId() {
 		return window;
+	}
+	
+	public void close() {
+		GLFW.glfwSetWindowShouldClose(window, true);
+	}
+
+	public boolean isFullscreen() {
+		return fullscreen;
 	}
 }
