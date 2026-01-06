@@ -61,4 +61,13 @@ public class TileMap {
 	public int getTileSize() {
 		return tileSize;
 	}
+
+	public boolean isSolid(int x, int y) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+	        return true; // outside = solid
+		}
+
+		int SOLID_TILE_ID = 1;
+	    return map[y][x] == SOLID_TILE_ID;
+	}
 }

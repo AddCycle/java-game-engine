@@ -6,19 +6,29 @@ import engine.core.Engine;
 import engine.core.Game;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
-import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
+import engine.inputs.controllers.PlatformerController;
+import engine.inputs.controllers.PlayerController2D;
+import engine.inputs.controllers.TopdownController;
+import engine.scene.Scene;
+import engine.scene.Scene2D;
+import engine.world.PlatformerWorld;
 import engine.world.TileMap;
-import engine.world.World;
+import engine.world.TopdownWorld;
+import engine.world.World2D;
+import engine.world.physics.PlatformerPhysics;
+import engine.world.physics.TopdownPhysics;
 
 public class NamelessAdventure implements Game {
 	private Engine engine;
 	private TileMap tilemap;
 	private EntityManager entityManager;
+	private PlayerController2D controller;
 	private Player2D player;
 	private int[] textures;
-	private World world;
+	private World2D world;
+	private Scene2D scene;
 	
 	public NamelessAdventure(Engine engine) {
 		this.engine = engine;
@@ -26,41 +36,55 @@ public class NamelessAdventure implements Game {
 
 	@Override
 	public void init() {
-		entityManager = new EntityManager(engine.getCamera());
-
 		textures = new int[2];
 		textures[0] = engine.getRenderer().loadTexture("resources/grass.png");
 		textures[1] = engine.getRenderer().loadTexture("resources/water.png");
 
 		int[][] tiles = {
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
-				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		};
-		tilemap = new TileMap(tiles, textures, 16);
-		world = new World(tilemap);
+
+		int tileSize = 16;
+		tilemap = new TileMap(tiles, textures, tileSize);
+		world = new TopdownWorld(tilemap);
+
+		if (world instanceof TopdownWorld) {
+		    controller = new TopdownController(engine.getInput());
+		    entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
+		} else {
+		    controller = new PlatformerController(engine.getInput());
+		    entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
+		}
 
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
-	    player = new Player2D(engine.getInput(), 32, 32, playerTex);
+	    player = new Player2D(controller, playerTex);
 
 	    engine.getCamera().setFollowEntity(player);
 	    engine.getCamera().setWorld(world);
+	    
+	    scene = new Scene(world, engine.getCamera(), player, entityManager);
+	    engine.setScene2D(scene);
 
 	    entityManager.add(player);
 	}
@@ -68,8 +92,6 @@ public class NamelessAdventure implements Game {
 	@Override
 	public void update(float dt) {
 		Inputs input = engine.getInput();
-		
-//		InputTesting.test1(input);
 		
 		if (input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
 			engine.stop();
@@ -79,15 +101,24 @@ public class NamelessAdventure implements Game {
 			Window window = engine.getWindow();
 			window.setFullScreen(!window.isFullscreen());
 		}
-		
-		entityManager.update(dt);
+
+		// switch between worlds at runtime
+		if (input.isKeyJustPressed(GLFW.GLFW_KEY_TAB)) {
+		    if (world instanceof TopdownWorld) {
+		        World2D platformerWorld = new PlatformerWorld(tilemap);
+		        PlayerController2D platformerController = new PlatformerController(input);
+		        scene.setWorld(platformerWorld, platformerController);
+		        entityManager.setPhysics(new PlatformerPhysics());
+		    } else {
+		        World2D tilemapWorld = new TopdownWorld(tilemap);
+		        PlayerController2D topDownController = new TopdownController(input);
+		        scene.setWorld(tilemapWorld, topDownController);
+		        entityManager.setPhysics(new TopdownPhysics());
+		    }
+		    world = scene.getWorld();
+		}
 	}
 
 	@Override
-	public void render() {
-		Renderer renderer = engine.getRenderer();
-		int scale = 8;
-		tilemap.render(renderer, scale, engine.getCamera());
-		entityManager.render(engine.getRenderer());
-	}
+	public void render() {}
 }

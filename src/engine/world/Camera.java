@@ -7,7 +7,7 @@ public class Camera {
 	public float x, y;
 	public float width, height;
 	private Entity followedEntity;
-	private World world;
+	private World2D world;
 
 	public Camera(int width, int height) {
 		this.width = width;
@@ -28,8 +28,8 @@ public class Camera {
 
 		// clamp the camera inside world bounds
 		if (world != null) {
-			x = Math.max(0, Math.min(x, world.width - width));
-	    		y = Math.max(0, Math.min(y, world.height - height));
+			x = Math.max(0, Math.min(x, world.getWidth() - width));
+	    		y = Math.max(0, Math.min(y, world.getHeight() - height));
 		}
 	    
 //	    if (x == 0 || y == 0 || x == World.WIDTH - Game.WIDTH || y == World.HEIGHT - Game.HEIGHT) {
@@ -41,7 +41,7 @@ public class Camera {
 //		Logger.info("w,h: %f,%f", width, height);
 	}
 	
-	public void setWorld(World world) {
+	public void setWorld(World2D world) {
 		this.world = world;
 	}
 }

@@ -8,6 +8,7 @@ import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
+import engine.scene.Scene2D;
 import engine.world.Camera;
 
 public class Engine {
@@ -16,6 +17,7 @@ public class Engine {
 	private Loader loader;
 	private Renderer renderer;
 	private Camera camera;
+	private Scene2D currentScene;
 
 	private Game game;
 	
@@ -35,6 +37,10 @@ public class Engine {
 	
 	public void setGame(Game game) {
 		this.game = game;
+	}
+	
+	public void setScene2D(Scene2D scene) {
+	    this.currentScene = scene;
 	}
 	
 	public void run() {
@@ -60,8 +66,10 @@ public class Engine {
             window.pollEvents();
 
             camera.update(dt);
+            if (currentScene != null) currentScene.update(dt);
             game.update(dt);
 
+            if (currentScene != null) currentScene.render(renderer, camera);
             game.render();
             window.swapBuffers();
 		}
