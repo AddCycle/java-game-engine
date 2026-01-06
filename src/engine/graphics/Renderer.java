@@ -11,13 +11,19 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import org.lwjgl.opengl.GL11;
 
+import engine.core.Logger;
 import engine.loader.TextureLoader;
+import engine.world.Camera;
 
 public class Renderer {
 	private TextureLoader textureLoader;
+	private Camera camera;
 	public static float ZOOM = 4.0f; // 2x, 3x, 0.75f, etc.
+	public static final float WORLD_W = 1280;
+	public static final float WORLD_H = 800;
 
-	public Renderer(TextureLoader texLoader) {
+	public Renderer(Camera camera, TextureLoader texLoader) {
+		this.camera = camera;
 		this.textureLoader = texLoader;
 	}
 	
@@ -50,12 +56,13 @@ public class Renderer {
 		GL11.glEnd();
 	}
 
-	public static void updateViewport(int windowW, int windowH) {
-	    float worldW = windowW / ZOOM;
-	    float worldH = windowH / ZOOM;
+	public void updateViewport(int windowW, int windowH) {
+		float scaleX = windowW / camera.width;
+	    float scaleY = windowH / camera.height;
+	    float scale = Math.min(scaleX, scaleY);
 
-	    int viewW = (int)(worldW * ZOOM);
-	    int viewH = (int)(worldH * ZOOM);
+	    int viewW = (int)(camera.width * scale);
+	    int viewH = (int)(camera.height * scale);
 
 	    int x = (windowW - viewW) / 2;
 	    int y = (windowH - viewH) / 2;
@@ -64,8 +71,10 @@ public class Renderer {
 
 	    GL11.glMatrixMode(GL11.GL_PROJECTION);
 	    GL11.glLoadIdentity();
-	    GL11.glOrtho(0, worldW, worldH, 0, -1, 1);
+	    GL11.glOrtho(0, camera.width, camera.height, 0, -1, 1);
 	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	    GL11.glLoadIdentity();
+	    
+	    Logger.info("updated viewport %d,%d", windowW, windowH);
 	}
 }

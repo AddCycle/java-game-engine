@@ -12,22 +12,24 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import engine.core.Logger;
-import engine.world.Camera;
 
 public class Window {
 	private long window;
 	public int width;
 	public int height;
 	private String title;
+	private String iconPath;
 	private boolean fullscreen;
+	private Renderer renderer;
 	
-	public Window(int width, int height, String title) {
+	public Window(int width, int height, String title, String icon) {
 		this.width = width;
 		this.height = height;
 		this.title = title;
+		this.iconPath = icon;
 	}
 	
-	public boolean create(Camera camera) {
+	public boolean create(Renderer renderer) {
 		if (!GLFW.glfwInit()) {
 			Logger.error("Failed to create window !");
 			return false;
@@ -35,29 +37,25 @@ public class Window {
 
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
+		this.renderer = renderer;
 		centerWindow();
 		GLFW.glfwMakeContextCurrent(window);
 		GL.createCapabilities();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Renderer.updateViewport(width, height);
-		float worldW = width / Renderer.ZOOM;
-		float worldH = height / Renderer.ZOOM;
-		camera.width = worldW;
-		camera.height = worldH;
+		renderer.updateViewport(width, height);
 		GLFW.glfwShowWindow(window);
 
 		// resize callback
 		GLFW.glfwSetFramebufferSizeCallback(window, (w, width, height) -> {
-		    Renderer.updateViewport(width, height);
-
-		    float worldWbis = width / Renderer.ZOOM;
-		    float worldHbis = height / Renderer.ZOOM;
-		    camera.width = worldWbis;
-		    camera.height = worldHbis;
+		    renderer.updateViewport(width, height);
 		});
 
 		Logger.info("Window created successfully");
+		
+		if (iconPath != null && !iconPath.isEmpty()) {
+			setIcon(iconPath);
+		}
 		
 		return true;
 	}
@@ -118,11 +116,11 @@ public class Window {
 		GLFWVidMode mode = GLFW.glfwGetVideoMode(monitor);
 		if (b) {
 			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
-			Renderer.updateViewport(mode.width(), mode.height());
+			renderer.updateViewport(mode.width(), mode.height());
 			fullscreen = true;
 		} else {
 			GLFW.glfwSetWindowMonitor(window, 0, 0, 0, width, height, mode.refreshRate());
-			Renderer.updateViewport(width, height);
+			renderer.updateViewport(width, height);
 			centerWindow();
 			fullscreen = false;
 		}

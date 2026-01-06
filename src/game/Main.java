@@ -8,11 +8,12 @@ public class Main {
 	public static void main(String[] args) {
 		Engine engine = new Engine.Builder()
 				.width(1280)
-				.height(800)
+				.height(720)
 				.title("Nameless Adventure")
 				.vsync(false)
 				.fullscreen(false)
 				.debug()
+				.icon("resources/icon.png")
 				.build();
 		Game game = new NamelessAdventure(engine);
 		engine.setGame(game);

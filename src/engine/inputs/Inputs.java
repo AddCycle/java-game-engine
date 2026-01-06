@@ -19,7 +19,6 @@ import java.util.Map;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;
 
-import engine.core.Engine;
 import engine.core.Logger;
 
 public class Inputs {
@@ -60,9 +59,9 @@ public class Inputs {
 				String keyName = KEY_NAMES.getOrDefault(key, GLFW.glfwGetKeyName(key, scancode));
 				keys[key] = action != GLFW.GLFW_RELEASE;
 				if (action == GLFW.GLFW_PRESS) {
-					if (Engine.debug()) Logger.info(String.format("key pressed : %s", keyName));
+					Logger.debug(String.format("key pressed : %s", keyName));
 				} else if (action == GLFW.GLFW_RELEASE) {
-					if (Engine.debug()) Logger.info(String.format("key released : %s", keyName));
+					Logger.debug(String.format("key released : %s", keyName));
 				}
 			}
 		});
@@ -71,12 +70,10 @@ public class Inputs {
 		GLFW.glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
 			if (button >= 0 && button < mouseButtons.length) {
 				mouseButtons[button] = action != GLFW.GLFW_RELEASE;
-				if (!Engine.debug())
-					return;
 				if (action == GLFW.GLFW_PRESS) {
-					Logger.info(String.format("mouse button pressed : %d", button));
+					Logger.debug(String.format("mouse button pressed : %d", button));
 				} else if (action == GLFW.GLFW_RELEASE) {
-					Logger.info(String.format("mouse button released : %d", button));
+					Logger.debug(String.format("mouse button released : %d", button));
 				}
 			}
 		});

@@ -40,7 +40,6 @@ public class TextureLoader {
 	        IntBuffer h = stack.mallocInt(1);
 	        IntBuffer channels = stack.mallocInt(1);
 
-//	        STBImage.stbi_set_flip_vertically_on_load(true);
 	        ByteBuffer image = STBImage.stbi_load(path, w, h, channels, 4);
 	        if (image == null) throw new RuntimeException("Failed to load image");
 

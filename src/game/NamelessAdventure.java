@@ -9,8 +9,8 @@ import engine.entities.Player2D;
 import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
-import engine.world.Camera;
 import engine.world.TileMap;
+import engine.world.World;
 
 public class NamelessAdventure implements Game {
 	private Engine engine;
@@ -18,6 +18,7 @@ public class NamelessAdventure implements Game {
 	private EntityManager entityManager;
 	private Player2D player;
 	private int[] textures;
+	private World world;
 	
 	public NamelessAdventure(Engine engine) {
 		this.engine = engine;
@@ -32,17 +33,34 @@ public class NamelessAdventure implements Game {
 		textures[1] = engine.getRenderer().loadTexture("resources/water.png");
 
 		int[][] tiles = {
-				{1, 0, 0, 1},
-				{0, 1, 1, 0},
-				{0, 1, 0, 0},
-				{1, 1, 1, 0}
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
+				{1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0},
 		};
 		tilemap = new TileMap(tiles, textures, 16);
+		world = new World(tilemap);
 
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
 	    player = new Player2D(engine.getInput(), 32, 32, playerTex);
 
 	    engine.getCamera().setFollowEntity(player);
+	    engine.getCamera().setWorld(world);
 
 	    entityManager.add(player);
 	}
