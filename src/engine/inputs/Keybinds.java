@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.inputs.action.Action;
 
+// FIXME : need to separate the actions between topdown world and platformer world, so between worlds
 public class Keybinds {
 	private Map<Action, Integer> keys = new HashMap<>();
     private Map<Action, Integer> padButtons = new HashMap<>();
@@ -17,12 +18,14 @@ public class Keybinds {
         keys.put(Action.MOVE_UP, GLFW.GLFW_KEY_W);
         keys.put(Action.MOVE_DOWN, GLFW.GLFW_KEY_S);
         keys.put(Action.JUMP, GLFW.GLFW_KEY_SPACE);
+        keys.put(Action.INTERACT, GLFW.GLFW_KEY_ENTER);
 
         padButtons.put(Action.MOVE_LEFT, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
         padButtons.put(Action.MOVE_RIGHT, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT);
         padButtons.put(Action.MOVE_UP, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP);
         padButtons.put(Action.MOVE_DOWN, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN);
         padButtons.put(Action.JUMP, GLFW.GLFW_GAMEPAD_BUTTON_A);
+        padButtons.put(Action.INTERACT, GLFW.GLFW_GAMEPAD_BUTTON_X);
     }
     
     public void bindKey(Action action, int key) {

@@ -14,8 +14,11 @@ public abstract class Entity {
 	public float width, height;
 	protected int texture;
 	public boolean onGround;
+	public Direction facing;
+	public boolean wantsToInteract;
 	
 	private final List<Consumer<Entity>> collisionListeners = new ArrayList<>();
+	public boolean markedForRemoval;
 
 	public Entity(float x, float y, float width, float height, int texture) {
 		this(x, y, width, height, 0, 0, texture);
@@ -29,6 +32,7 @@ public abstract class Entity {
 		this.width = width;
 		this.height = height;
 		this.texture = texture;
+		this.facing = Direction.DOWN;
 	}
 	
 	public abstract void update(float dt);
@@ -45,4 +49,29 @@ public abstract class Entity {
     public void notifyCollision(Entity other) {
         for (var cb : collisionListeners) cb.accept(other);
     }
+    
+    /**
+     * Interaction part
+     * @param range
+     * @return a Floating point rectangle
+     */
+    public Rectangle.Float getInteractionBox(float range) {
+        float ix = x;
+        float iy = y;
+
+        if (facing == Direction.LEFT)  ix -= range;
+        if (facing == Direction.RIGHT) ix += width;
+        if (facing == Direction.UP)    iy -= range;
+        if (facing == Direction.DOWN)  iy += height;
+
+        return new Rectangle.Float(ix, iy, range, range);
+    }
+    
+	public void tryInteract() {
+		this.wantsToInteract = true;
+	}
+
+	public boolean wantsToInteract() {
+		return wantsToInteract;
+	}
 }

@@ -40,6 +40,8 @@ public class EntityManager {
         }
         
         checkCollisions();
+        
+        entities.removeIf(e -> e.markedForRemoval);
     }
 
     private void checkCollisions() {
@@ -57,12 +59,15 @@ public class EntityManager {
     }
 
 	public void render(Renderer renderer) {
-		// FIXME : remove it after some testing because copy over and over the entities arrays won't be suitable for lots of entities
-        for (Entity e : new ArrayList<>(entities))
+        for (Entity e : entities)
             e.render(renderer, camera);
     }
 
 	public void clear() {
 		entities.clear();
+	}
+
+	public List<Entity> getEntities() {
+		return entities;
 	}
 }

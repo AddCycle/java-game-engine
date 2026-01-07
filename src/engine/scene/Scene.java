@@ -1,5 +1,8 @@
 package engine.scene;
 
+import java.util.List;
+
+import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
 import engine.graphics.Renderer;
@@ -46,5 +49,15 @@ public class Scene implements Scene2D {
 	@Override
 	public World2D getWorld() {
 		return world;
+	}
+
+	@Override
+	public List<Entity> getEntities() {
+		return entities.getEntities();
+	}
+	
+	@Override
+	public Player2D getPlayer() {
+		return player;
 	}
 }

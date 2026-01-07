@@ -1,7 +1,6 @@
 package engine.inputs.controllers;
 
-import org.lwjgl.glfw.GLFW;
-
+import static engine.entities.Direction.*;
 import engine.entities.Player2D;
 import engine.inputs.Inputs;
 import engine.inputs.Keybinds;
@@ -37,58 +36,85 @@ public class TopdownController implements PlayerController2D {
 			tileMovement(player, dt);
 		else
 			basicMovement(player, dt);
+
+		// Interaction controls
+		if (keybinds.isJustPressed(input, Action.INTERACT)) {
+			player.tryInteract();
+		}
 	}
-	
+
 	private void tileMovement(Player2D player, float dt) {
 		if (player.moving) {
-	        moveToTarget(player, dt);
-	        return;
-	    }
+			moveToTarget(player, dt);
+			return;
+		}
 
-	    if (keybinds.isDown(input, Action.MOVE_LEFT)) startMove(player, -1, 0);
-	    else if (keybinds.isDown(input, Action.MOVE_RIGHT)) startMove(player, 1, 0);
-	    else if (keybinds.isDown(input, Action.MOVE_UP)) startMove(player, 0, -1);
-	    else if (keybinds.isDown(input, Action.MOVE_DOWN)) startMove(player, 0, 1);
+		if (keybinds.isDown(input, Action.MOVE_LEFT)) {
+			startMove(player, -1, 0);
+			player.facing = LEFT;
+		} else if (keybinds.isDown(input, Action.MOVE_RIGHT)) {
+			startMove(player, 1, 0);
+			player.facing = RIGHT;
+		} else if (keybinds.isDown(input, Action.MOVE_UP)) {
+			player.facing = UP;
+			startMove(player, 0, -1);
+		} else if (keybinds.isDown(input, Action.MOVE_DOWN)) {
+			player.facing = DOWN;
+			startMove(player, 0, 1);
+		}
 	}
 
 	private void basicMovement(Player2D player, float dt) {
 		player.vx = 0;
 		player.vy = 0;
 
-		if (input.isKeyDown(GLFW.GLFW_KEY_A)) player.vx = -speed;
-		if (input.isKeyDown(GLFW.GLFW_KEY_D)) player.vx = speed;
-		if (input.isKeyDown(GLFW.GLFW_KEY_W)) player.vy = -speed;
-		if (input.isKeyDown(GLFW.GLFW_KEY_S)) player.vy = speed;
+		if (keybinds.isDown(input, Action.MOVE_LEFT)) {
+			player.facing = LEFT;
+			player.vx = -speed;
+		}
+		if (keybinds.isDown(input, Action.MOVE_RIGHT)) {
+			player.facing = RIGHT;
+			player.vx = speed;
+		}
+		if (keybinds.isDown(input, Action.MOVE_UP)) {
+			player.facing = UP;
+			player.vy = -speed;
+		}
+		if (keybinds.isDown(input, Action.MOVE_DOWN)) {
+			player.facing = DOWN;
+			player.vy = speed;
+		}
 	}
 
 	private void startMove(Player2D p, int dx, int dy) {
-	    p.targetTileX = p.tileX + dx;
-	    p.targetTileY = p.tileY + dy;
+		p.targetTileX = p.tileX + dx;
+		p.targetTileY = p.tileY + dy;
 
-	    if (map.isSolid(p.targetTileX, p.targetTileY)) return;
+		if (map.isSolid(p.targetTileX, p.targetTileY))
+			return;
 
-	    p.moving = true;
+		p.moving = true;
 	}
-	
+
 	private void moveToTarget(Player2D p, float dt) {
-	    float targetX = p.targetTileX * map.getTileSize();
-	    float targetY = p.targetTileY * map.getTileSize();
+		float targetX = p.targetTileX * map.getTileSize();
+		float targetY = p.targetTileY * map.getTileSize();
 
-	    float speed = this.speed;
+		float speed = this.speed;
 
-	    p.x = approach(p.x, targetX, speed * dt);
-	    p.y = approach(p.y, targetY, speed * dt);
+		p.x = approach(p.x, targetX, speed * dt);
+		p.y = approach(p.y, targetY, speed * dt);
 
-	    if (p.x == targetX && p.y == targetY) {
-	        p.tileX = p.targetTileX;
-	        p.tileY = p.targetTileY;
-	        p.moving = false;
-	    }
+		if (p.x == targetX && p.y == targetY) {
+			p.tileX = p.targetTileX;
+			p.tileY = p.targetTileY;
+			p.moving = false;
+		}
 	}
-	
+
 	private float approach(float current, float target, float maxDelta) {
-	    if (current < target)
-	        return Math.min(current + maxDelta, target);
-	    return Math.max(current - maxDelta, target);
+		if (current < target)
+			return Math.min(current + maxDelta, target);
+		return Math.max(current - maxDelta, target);
 	}
 }

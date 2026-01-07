@@ -1,5 +1,6 @@
 package entities.objects;
 
+import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
@@ -20,8 +21,8 @@ public class GameObjectsTesting {
 
         coin.addCollisionListener(other -> {
             if (other == player) {
-                System.out.println("Player collected coin!");
-                entityManager.remove(coin); // remove coin from world
+            		Logger.info("Coin gathered !");
+            		coin.markedForRemoval = true;
             }
         });
         

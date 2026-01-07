@@ -1,8 +1,9 @@
 package engine.state.play;
 
 import engine.core.Engine;
+import engine.entities.Player2D;
+import engine.entities.interaction.InteractionSystem;
 import engine.graphics.Renderer;
-import engine.scene.Scene;
 import engine.scene.Scene2D;
 import engine.state.GameState;
 
@@ -22,6 +23,13 @@ public class PlayState implements GameState {
 	@Override
 	public void update(float dt) {
 		scene.update(dt);
+		
+		Player2D player = scene.getPlayer();
+
+	    if (player.wantsToInteract()) {
+	        InteractionSystem.tryInteract(player, player.getInteractionBox(8), scene.getEntities());
+	        player.wantsToInteract = false;
+	    }
 	}
 
 	@Override

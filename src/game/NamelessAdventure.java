@@ -1,7 +1,5 @@
 package game;
 
-import java.lang.classfile.instruction.ConstantInstruction.ArgumentConstantInstruction;
-
 import org.lwjgl.glfw.GLFW;
 
 import engine.core.Engine;
@@ -10,7 +8,6 @@ import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
-import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.inputs.controllers.PlatformerController;
@@ -20,13 +17,14 @@ import engine.scene.Scene;
 import engine.scene.Scene2D;
 import engine.state.menu.PauseState;
 import engine.state.play.PlayState;
-import engine.world.Camera;
 import engine.world.PlatformerWorld;
 import engine.world.TileMap;
 import engine.world.TopdownWorld;
 import engine.world.World2D;
 import engine.world.physics.PlatformerPhysics;
 import engine.world.physics.TopdownPhysics;
+import entities.interaction.InteractibleNPC;
+import entities.interaction.PlayerInteractionTesting;
 import entities.objects.GameObjectsTesting;
 
 public class NamelessAdventure implements Game {
@@ -76,18 +74,27 @@ public class NamelessAdventure implements Game {
 
 		int tileSize = 16;
 		tilemap = new TileMap(tiles, textures, tileSize);
+//		world = new PlatformerWorld(tilemap);
 		world = new TopdownWorld(tilemap);
 
 		if (world instanceof TopdownWorld) {
 		    controller = new TopdownController(engine.getInput(), tilemap);
 		    entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
-		} else {
+		} else if (world instanceof PlatformerWorld) {
 		    controller = new PlatformerController(engine.getInput());
 		    entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
 		}
 
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
 	    player = new Player2D(controller, playerTex);
+	    
+	    if (world instanceof TopdownWorld) {
+	    		InteractibleNPC npc = PlayerInteractionTesting.createTestNPC();
+	    		entityManager.add(npc);
+		} else if (world instanceof PlatformerWorld) {
+			Entity coin = GameObjectsTesting.createTestCoin(player, entityManager);
+			entityManager.add(coin);
+	    }
 
 	    engine.getCamera().setFollowEntity(player);
 	    engine.getCamera().setWorld(world);
@@ -96,10 +103,6 @@ public class NamelessAdventure implements Game {
 	    engine.getGameStateManager().set(new PlayState(scene), engine);
 
 	    entityManager.add(player);
-	    
-	    Entity coin = GameObjectsTesting.createTestCoin(player, entityManager);
-
-        entityManager.add(coin);
 	}
 
 	@Override
