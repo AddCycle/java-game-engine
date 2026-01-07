@@ -3,6 +3,8 @@ package entities.interaction;
 import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.interaction.Interactible;
+import engine.entities.interaction.InteractionResult;
+import engine.entities.interaction.InteractionType;
 import engine.graphics.Renderer;
 import engine.world.Camera;
 
@@ -13,8 +15,12 @@ public class InteractibleNPC extends Entity implements Interactible {
 	}
 
 	@Override
-	public void interact(Entity interactor) {
-		Logger.debug("Hello my friend how are you ?");
+	public InteractionResult interact(Entity interactor) {
+		Logger.debug("Interacted with npc");
+		return new InteractionResult(
+		        InteractionType.DIALOG,
+		        "Hello my friend, how are you?"
+		    );
 	}
 
 	@Override

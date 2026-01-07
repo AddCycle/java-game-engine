@@ -6,11 +6,11 @@ import java.util.List;
 import engine.entities.Entity;
 
 /**
- * This class is handling the entities interactions (tmp I think)
+ * This class is helping the detection of the interaction between the entities
  */
 public class InteractionSystem {
 
-	public static void tryInteract(
+	public static InteractionResult tryInteract(
             Entity interactor,
             Rectangle.Float box,
             List<Entity> entities) {
@@ -18,10 +18,12 @@ public class InteractionSystem {
         for (Entity e : entities) {
             if (e instanceof Interactible i && e != interactor) {
                 if (box.intersects(e.getHitbox())) {
-                    i.interact(interactor);
-                    return;
+                		InteractionResult result = i.interact(interactor);
+                		return result;
                 }
             }
         }
+
+        return null;
     }
 }

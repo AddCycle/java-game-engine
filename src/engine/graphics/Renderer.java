@@ -17,14 +17,22 @@ import engine.world.Camera;
 
 public class Renderer {
 	private TextureLoader textureLoader;
+	private int fontTexture;
 	private Camera camera;
 //	public static float ZOOM = 1.0f; // 2x, 3x, 0.75f, etc.
 	public static final float WORLD_W = 1280;
 	public static final float WORLD_H = 800;
 
+	private static final int FONT_COLS = 32;
+	private static final int FONT_ROWS = 4;
+
 	public Renderer(Camera camera, TextureLoader texLoader) {
 		this.camera = camera;
 		this.textureLoader = texLoader;
+	}
+
+	public void loadDefaultFont() {
+	    fontTexture = loadTexture("resources/assets/font.png");
 	}
 	
 	public int loadTexture(String texPath) {
@@ -107,5 +115,50 @@ public class Renderer {
 	    GL11.glLoadIdentity();
 	    
 	    Logger.info("updated viewport %d,%d", windowW, windowH);
+	}
+	
+	public void drawDialogBox(float x, float y, float w, float h) {
+	    Renderer.drawRect(x, y, w, h, 0f, 0f, 0f);      // background
+	    Renderer.drawRect(x+2, y+2, w-4, h-4, 1f, 1f, 1f); // border
+	}
+	
+	public void drawText(String text, float x, float y, int charW, int charH) {
+	    float startX = x;
+
+	    for (char c : text.toCharArray()) {
+	        if (c == '\n') {
+	            y += charH;
+	            x = startX;
+	            continue;
+	        }
+
+	        drawChar(c, x, y, charW, charH);
+	        x += charW;
+	    }
+	}
+
+	private void drawChar(char c, float x, float y, int charW, int charH) {
+	    int ascii = c;
+
+	    int col = ascii % FONT_COLS;
+	    int row = ascii / FONT_COLS;
+
+	    float u = col / (float) FONT_COLS;
+	    float v = row / (float) FONT_ROWS;
+	    float uSize = 1f / FONT_COLS;
+	    float vSize = 1f / FONT_ROWS;
+
+	    GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+	    GL11.glEnable(GL11.GL_TEXTURE_2D);
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, fontTexture);
+
+	    GL11.glBegin(GL11.GL_QUADS);
+	    glTexCoord2f(u, v);                 glVertex2f(x, y);
+	    glTexCoord2f(u, v + vSize);         glVertex2f(x, y + charH);
+	    glTexCoord2f(u + uSize, v + vSize); glVertex2f(x + charW, y + charH);
+	    glTexCoord2f(u + uSize, v);         glVertex2f(x + charW, y);
+	    GL11.glEnd();
+
+	    GL11.glPopAttrib();
 	}
 }

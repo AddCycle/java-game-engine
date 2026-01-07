@@ -1,10 +1,11 @@
-package engine.inputs;
+package engine.inputs.keybinds;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
+import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 
 // FIXME : need to separate the actions between topdown world and platformer world, so between worlds

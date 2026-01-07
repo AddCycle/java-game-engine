@@ -3,8 +3,8 @@ package engine.inputs.controllers;
 import static engine.entities.Direction.*;
 import engine.entities.Player2D;
 import engine.inputs.Inputs;
-import engine.inputs.Keybinds;
 import engine.inputs.action.Action;
+import engine.inputs.keybinds.Keybinds;
 import engine.world.TileMap;
 
 public class TopdownController implements PlayerController2D {

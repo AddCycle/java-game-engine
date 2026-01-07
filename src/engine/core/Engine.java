@@ -42,6 +42,8 @@ public class Engine {
 	
 	public void run() {
 		window.create(renderer);
+
+		renderer.loadDefaultFont();
 		
 		if (vsync) window.enableVSync();
 		if (fullscreen) window.setFullScreen(true);

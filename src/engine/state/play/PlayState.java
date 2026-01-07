@@ -2,10 +2,13 @@ package engine.state.play;
 
 import engine.core.Engine;
 import engine.entities.Player2D;
+import engine.entities.interaction.InteractionResult;
 import engine.entities.interaction.InteractionSystem;
+import engine.entities.interaction.InteractionType;
 import engine.graphics.Renderer;
 import engine.scene.Scene2D;
 import engine.state.GameState;
+import engine.state.dialog.DialogState;
 
 public class PlayState implements GameState {
 	private Engine engine;
@@ -27,7 +30,8 @@ public class PlayState implements GameState {
 		Player2D player = scene.getPlayer();
 
 	    if (player.wantsToInteract()) {
-	        InteractionSystem.tryInteract(player, player.getInteractionBox(8), scene.getEntities());
+	        InteractionResult result = InteractionSystem.tryInteract(player, player.getInteractionBox(8), scene.getEntities());
+	        handleInteraction(result);
 	        player.wantsToInteract = false;
 	    }
 	}
@@ -40,4 +44,13 @@ public class PlayState implements GameState {
 	@Override
 	public void dispose() {}
 
+	private void handleInteraction(InteractionResult result) {
+		if (result == null) return;
+
+	    if (result.type() == InteractionType.DIALOG) {
+	        engine.getGameStateManager().push(
+	            new DialogState(result.text()), engine
+	        );
+	    }
+	}
 }

@@ -4,8 +4,8 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.entities.Player2D;
 import engine.inputs.Inputs;
-import engine.inputs.Keybinds;
 import engine.inputs.action.Action;
+import engine.inputs.keybinds.Keybinds;
 
 public class PlatformerController implements PlayerController2D {
 	private Inputs input;

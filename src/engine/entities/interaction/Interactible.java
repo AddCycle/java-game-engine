@@ -6,5 +6,5 @@ public interface Interactible {
 	/**
 	 * @param interactor : the initiator of the interaction
 	 */
-	void interact(Entity interactor);
+	InteractionResult interact(Entity interactor);
 }
