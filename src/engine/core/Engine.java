@@ -8,7 +8,6 @@ import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
-import engine.scene.Scene2D;
 import engine.state.GameStateManager;
 import engine.world.Camera;
 
@@ -71,6 +70,7 @@ public class Engine {
             gsm.render(renderer);
             game.render();
             window.swapBuffers();
+            
 		}
 		
 		cleanUp();

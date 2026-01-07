@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.core.Engine;
 import engine.core.Game;
+import engine.core.Logger;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
 import engine.graphics.Window;
@@ -13,6 +14,7 @@ import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
 import engine.scene.Scene;
 import engine.scene.Scene2D;
+import engine.state.menu.PauseState;
 import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
 import engine.world.TileMap;
@@ -94,8 +96,9 @@ public class NamelessAdventure implements Game {
 	public void update(float dt) {
 		Inputs input = engine.getInput();
 		
-		if (input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-			engine.stop();
+		if (input.isKeyJustPressed(GLFW.GLFW_KEY_ESCAPE)) {
+			Logger.debug("switched to gamestate pause");
+			engine.getGameStateManager().push(new PauseState(), engine);
 		}
 
 		if (input.isKeyJustPressed(GLFW.GLFW_KEY_F11)) {

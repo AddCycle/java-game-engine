@@ -18,7 +18,7 @@ import engine.world.Camera;
 public class Renderer {
 	private TextureLoader textureLoader;
 	private Camera camera;
-	public static float ZOOM = 4.0f; // 2x, 3x, 0.75f, etc.
+//	public static float ZOOM = 1.0f; // 2x, 3x, 0.75f, etc.
 	public static final float WORLD_W = 1280;
 	public static final float WORLD_H = 800;
 
@@ -32,6 +32,9 @@ public class Renderer {
 	}
 
 	public void drawTexturedRect(int textureID, float x, float y, float width, float height) {
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glPushMatrix();
+
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -41,11 +44,15 @@ public class Renderer {
 	    glTexCoord2f(1, 1); glVertex2f(x + width, y + height); // top-right
 	    glTexCoord2f(1, 0); glVertex2f(x + width, y); // bottom-right
 		glEnd();
+
+		GL11.glPopMatrix();
+	    GL11.glPopAttrib();
 	}
 
 	public static void drawRect(float x, float y, float width, float height) {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glPushMatrix();
+		
 		GL11.glColor3f(1f, 1f, 1f);
 		GL11.glBegin(GL11.GL_QUADS);
 
@@ -54,6 +61,9 @@ public class Renderer {
 	    glVertex2f(x + width, y + height); // top-right
 	    glVertex2f(x + width, y); // bottom-right
 		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	    GL11.glPopAttrib();
 	}
 
 	public void updateViewport(int windowW, int windowH) {
