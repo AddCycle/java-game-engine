@@ -70,7 +70,7 @@ public class NamelessAdventure implements Game {
 		world = new TopdownWorld(tilemap);
 
 		if (world instanceof TopdownWorld) {
-		    controller = new TopdownController(engine.getInput());
+		    controller = new TopdownController(engine.getInput(), tilemap);
 		    entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
 		} else {
 		    controller = new PlatformerController(engine.getInput());
@@ -111,7 +111,7 @@ public class NamelessAdventure implements Game {
 		        entityManager.setPhysics(new PlatformerPhysics());
 		    } else {
 		        World2D tilemapWorld = new TopdownWorld(tilemap);
-		        PlayerController2D topDownController = new TopdownController(input);
+		        PlayerController2D topDownController = new TopdownController(input, tilemap);
 		        scene.setWorld(tilemapWorld, topDownController);
 		        entityManager.setPhysics(new TopdownPhysics());
 		    }

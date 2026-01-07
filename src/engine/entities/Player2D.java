@@ -6,6 +6,9 @@ import engine.world.Camera;
 
 public class Player2D extends Entity {
 	private PlayerController2D controller;
+	public int tileX, tileY;
+	public int targetTileX, targetTileY;
+	public boolean moving = false;
 
     public Player2D(PlayerController2D controller, int texture) {
     		this(controller, 0, 0, texture);
