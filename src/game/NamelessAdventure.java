@@ -1,12 +1,16 @@
 package game;
 
+import java.lang.classfile.instruction.ConstantInstruction.ArgumentConstantInstruction;
+
 import org.lwjgl.glfw.GLFW;
 
 import engine.core.Engine;
 import engine.core.Game;
 import engine.core.Logger;
+import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
+import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.inputs.controllers.PlatformerController;
@@ -16,12 +20,14 @@ import engine.scene.Scene;
 import engine.scene.Scene2D;
 import engine.state.menu.PauseState;
 import engine.state.play.PlayState;
+import engine.world.Camera;
 import engine.world.PlatformerWorld;
 import engine.world.TileMap;
 import engine.world.TopdownWorld;
 import engine.world.World2D;
 import engine.world.physics.PlatformerPhysics;
 import engine.world.physics.TopdownPhysics;
+import entities.objects.GameObjectsTesting;
 
 public class NamelessAdventure implements Game {
 	private Engine engine;
@@ -90,6 +96,10 @@ public class NamelessAdventure implements Game {
 	    engine.getGameStateManager().set(new PlayState(scene), engine);
 
 	    entityManager.add(player);
+	    
+	    Entity coin = GameObjectsTesting.createTestCoin(player, entityManager);
+
+        entityManager.add(coin);
 	}
 
 	@Override

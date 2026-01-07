@@ -1,6 +1,9 @@
 package engine.entities;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import engine.graphics.Renderer;
 import engine.world.Camera;
@@ -11,6 +14,8 @@ public abstract class Entity {
 	public float width, height;
 	protected int texture;
 	public boolean onGround;
+	
+	private final List<Consumer<Entity>> collisionListeners = new ArrayList<>();
 
 	public Entity(float x, float y, float width, float height, int texture) {
 		this(x, y, width, height, 0, 0, texture);
@@ -31,5 +36,13 @@ public abstract class Entity {
     
     public Rectangle.Float getHitbox() {
         return new Rectangle.Float(x, y, width, height);
+    }
+    
+    public void addCollisionListener(Consumer<Entity> callback) {
+        collisionListeners.add(callback);
+    }
+
+    public void notifyCollision(Entity other) {
+        for (var cb : collisionListeners) cb.accept(other);
     }
 }

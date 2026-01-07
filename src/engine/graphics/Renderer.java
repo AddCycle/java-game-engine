@@ -48,6 +48,27 @@ public class Renderer {
 		GL11.glPopMatrix();
 	    GL11.glPopAttrib();
 	}
+	
+	private static float clampColor(float c) {
+		return Math.clamp(c, 0f, 1f);
+	}
+
+	public static void drawRect(float x, float y, float width, float height, float r, float g, float b) {
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_COLOR | GL11.GL_CURRENT_BIT);
+		GL11.glPushMatrix();
+		
+		GL11.glColor3f(clampColor(r), clampColor(g), clampColor(b));
+		GL11.glBegin(GL11.GL_QUADS);
+
+		glVertex2f(x, y); // bottom-left
+	    glVertex2f(x, y + height); // top-left
+	    glVertex2f(x + width, y + height); // top-right
+	    glVertex2f(x + width, y); // bottom-right
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	    GL11.glPopAttrib();
+	}
 
 	public static void drawRect(float x, float y, float width, float height) {
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);

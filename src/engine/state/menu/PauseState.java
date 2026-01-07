@@ -36,7 +36,7 @@ public class PauseState implements GameState {
 	public void render(Renderer renderer) {
 		float w = engine.getWindow().width;
 		float h = engine.getWindow().height;
-		Renderer.drawRect(0, 0, w, h);
+		Renderer.drawRect(0, 0, w, h, 0.5f, 0.5f, 1.0f);
 	}
 
 	@Override

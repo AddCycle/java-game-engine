@@ -29,15 +29,36 @@ public class EntityManager {
         entities.add(e);
     }
 
+	public void remove(Entity e) {
+		entities.remove(e);
+	}
+
     public void update(float dt, World2D world) {
         for (Entity e : entities) {
             e.update(dt);
             physics.update(e, world, dt);
         }
+        
+        checkCollisions();
     }
 
-    public void render(Renderer renderer) {
-        for (Entity e : entities)
+    private void checkCollisions() {
+        for (int i = 0; i < entities.size(); i++) {
+            Entity a = entities.get(i);
+            for (int j = i + 1; j < entities.size(); j++) {
+                Entity b = entities.get(j);
+
+                if (a.getHitbox().intersects(b.getHitbox())) {
+                    a.notifyCollision(b);
+                    b.notifyCollision(a);
+                }
+            }
+        }
+    }
+
+	public void render(Renderer renderer) {
+		// FIXME : remove it after some testing because copy over and over the entities arrays won't be suitable for lots of entities
+        for (Entity e : new ArrayList<>(entities))
             e.render(renderer, camera);
     }
 
