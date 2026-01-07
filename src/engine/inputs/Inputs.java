@@ -9,10 +9,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SHIFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.glfwGetJoystickButtons;
 import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Map;
 
@@ -20,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;
 
 import engine.core.Logger;
+import engine.inputs.action.Action;
 
 public class Inputs {
 	private long window;
@@ -27,6 +26,9 @@ public class Inputs {
 	private boolean[] prevKeys = new boolean[GLFW.GLFW_KEY_LAST];
 	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+	
+	private boolean[] padButtons = new boolean[GLFW.GLFW_GAMEPAD_BUTTON_LAST+1];
+	private boolean[] prevPadButtons = new boolean[GLFW.GLFW_GAMEPAD_BUTTON_LAST+1];
 
 	private double mouseX, mouseY;
 
@@ -36,6 +38,24 @@ public class Inputs {
 			Map.entry(GLFW_KEY_TAB, "TAB"), Map.entry(GLFW_KEY_ENTER, "ENTER"),
 			Map.entry(GLFW_KEY_BACKSPACE, "BACKSPACE"), Map.entry(GLFW.GLFW_KEY_SPACE, "SPACE"),
 			Map.entry(GLFW.GLFW_KEY_ESCAPE, "ESCAPE"));
+	
+	private static final String[] GAMEPAD_BUTTON_NAMES = {
+		    "A",        // 0
+		    "B",        // 1
+		    "X",        // 2
+		    "Y",        // 3
+		    "LB",       // 4
+		    "RB",       // 5
+		    "BACK",     // 6
+		    "START",    // 7
+		    "GUIDE",    // 8
+		    "L_STICK",  // 9
+		    "R_STICK",  // 10
+		    "DPAD_UP",  // 11
+		    "DPAD_RIGHT",// 12
+		    "DPAD_DOWN", // 13
+		    "DPAD_LEFT"  // 14
+		};
 
 	public Inputs(long window) {
 		this.window = window;
@@ -65,7 +85,7 @@ public class Inputs {
 				}
 			}
 		});
-
+		
 		// mouse buttons
 		GLFW.glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
 			if (button >= 0 && button < mouseButtons.length) {
@@ -82,13 +102,44 @@ public class Inputs {
 		GLFW.glfwSetCursorPosCallback(window, (w, xpos, ypos) -> {
 			mouseX = xpos;
 			mouseY = ypos;
+//			Logger.debug("mouseX,mouseY: %f, %f", mouseX, mouseY);
 		});
+	}
+	
+	private void pollGamepad(int jid) {
+	    if (!GLFW.glfwJoystickPresent(jid)) return;
+	    if (!GLFW.glfwJoystickIsGamepad(jid)) return;
+
+	    GLFWGamepadState state = GLFWGamepadState.create();
+	    GLFW.glfwGetGamepadState(jid, state);
+
+	    for (int i = 0; i < padButtons.length; i++) {
+	    		boolean pressed = state.buttons(i) == GLFW.GLFW_PRESS;
+	        padButtons[i] = pressed;
+	        if (pressed && !prevPadButtons[i]) {
+	            Logger.debug("Gamepad button pressed: %s", getGamepadButton(i));
+	        } else if (!pressed && prevPadButtons[i]) {
+	            Logger.debug("Gamepad button released: %s", getGamepadButton(i));
+	        }
+	    }
+	}
+	
+	public String getGamepadButton(int gamepadButton) {
+	    return GAMEPAD_BUTTON_NAMES[gamepadButton];
 	}
 
 	public void update() {
+		// keys
 	    for (int i = 0; i < keys.length; i++) {
 	        prevKeys[i] = keys[i]; // store state for next frame
 	    }
+	    
+	    // gamepad
+	    for (int i = 0; i < padButtons.length; i++) {
+	        prevPadButtons[i] = padButtons[i];
+	    }
+	    
+	    pollGamepad(GLFW.GLFW_JOYSTICK_1);
 	}
 
 	// Keyboard query
@@ -113,22 +164,31 @@ public class Inputs {
 		return mouseY;
 	}
 
-	// Poll gamepads/controllers
-	public boolean isControllerButtonDown(int jid, int button) {
-		if (glfwJoystickPresent(jid)) {
-			GLFWGamepadState state = GLFWGamepadState.create();
-			if (GLFW.glfwJoystickIsGamepad(jid)) {
-				GLFW.glfwGetGamepadState(jid, state);
-				return state.buttons(button) == GLFW.GLFW_PRESS;
-			} else {
-				ByteBuffer buttons = glfwGetJoystickButtons(jid);
-				if (buttons != null && button < buttons.limit()) {
-					return buttons.get(button) == GLFW.GLFW_PRESS;
-				}
-			}
-		}
-		return false;
+	// gamepad query
+	public boolean isPadButtonDown(int button) {
+	    return padButtons[button];
 	}
+
+	public boolean isPadButtonJustPressed(int button) {
+	    return padButtons[button] && !prevPadButtons[button];
+	}
+
+//	// Poll gamepads/controllers
+//	public boolean isControllerButtonDown(int jid, int button) {
+//		if (glfwJoystickPresent(jid)) {
+//			GLFWGamepadState state = GLFWGamepadState.create();
+//			if (GLFW.glfwJoystickIsGamepad(jid)) {
+//				GLFW.glfwGetGamepadState(jid, state);
+//				return state.buttons(button) == GLFW.GLFW_PRESS;
+//			} else {
+//				ByteBuffer buttons = glfwGetJoystickButtons(jid);
+//				if (buttons != null && button < buttons.limit()) {
+//					return buttons.get(button) == GLFW.GLFW_PRESS;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
 	public float getControllerAxis(int jid, int axis) {
 		if (glfwJoystickPresent(jid)) {

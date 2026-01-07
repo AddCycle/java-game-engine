@@ -9,16 +9,16 @@ import engine.inputs.Inputs;
 
 public class InputTesting {
 	public static void test1(Inputs input) {
-		if (input.isControllerButtonDown(GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
+		if (input.isPadButtonDown(GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) {
 			Logger.info("pressed left");
 		}
-		if (input.isControllerButtonDown(GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT)) {
+		if (input.isPadButtonDown(GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT)) {
 			Logger.info("pressed right");
 		}
-		if (input.isControllerButtonDown(GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP)) {
+		if (input.isPadButtonDown(GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP)) {
 			Logger.info("pressed up");
 		}
-		if (input.isControllerButtonDown(GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) {
+		if (input.isPadButtonDown(GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) {
 			Logger.info("pressed down");
 		}
 		

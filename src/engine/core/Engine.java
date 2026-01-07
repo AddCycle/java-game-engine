@@ -9,6 +9,7 @@ import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
 import engine.scene.Scene2D;
+import engine.state.GameStateManager;
 import engine.world.Camera;
 
 public class Engine {
@@ -17,7 +18,7 @@ public class Engine {
 	private Loader loader;
 	private Renderer renderer;
 	private Camera camera;
-	private Scene2D currentScene;
+	private GameStateManager gsm;
 
 	private Game game;
 	
@@ -33,14 +34,11 @@ public class Engine {
 		loader = new Loader();
 		camera = new Camera(320, 180); // TODO: make settings variable(16:9) aspect ratio by default leading to black bars
 		renderer = new Renderer(camera, loader.getTextureLoader());
+		gsm = new GameStateManager();
 	}
 	
 	public void setGame(Game game) {
 		this.game = game;
-	}
-	
-	public void setScene2D(Scene2D scene) {
-	    this.currentScene = scene;
 	}
 	
 	public void run() {
@@ -66,10 +64,11 @@ public class Engine {
             window.pollEvents();
 
             camera.update(dt);
-            if (currentScene != null) currentScene.update(dt);
+
+            gsm.update(dt);
             game.update(dt);
 
-            if (currentScene != null) currentScene.render(renderer, camera);
+            gsm.render(renderer);
             game.render();
             window.swapBuffers();
 		}
@@ -131,5 +130,9 @@ public class Engine {
 
 	public Camera getCamera() {
 		return camera;
+	}
+	
+	public GameStateManager getGameStateManager() {
+		return gsm;
 	}
 }

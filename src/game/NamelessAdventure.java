@@ -13,6 +13,7 @@ import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
 import engine.scene.Scene;
 import engine.scene.Scene2D;
+import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
 import engine.world.TileMap;
 import engine.world.TopdownWorld;
@@ -84,7 +85,7 @@ public class NamelessAdventure implements Game {
 	    engine.getCamera().setWorld(world);
 	    
 	    scene = new Scene(world, engine.getCamera(), player, entityManager);
-	    engine.setScene2D(scene);
+	    engine.getGameStateManager().set(new PlayState(scene), engine);
 
 	    entityManager.add(player);
 	}

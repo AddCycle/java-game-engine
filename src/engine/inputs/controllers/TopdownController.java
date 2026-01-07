@@ -4,10 +4,13 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.entities.Player2D;
 import engine.inputs.Inputs;
+import engine.inputs.Keybinds;
+import engine.inputs.action.Action;
 import engine.world.TileMap;
 
 public class TopdownController implements PlayerController2D {
 	private Inputs input;
+	private Keybinds keybinds;
 	private float speed;
 	private TileMap map;
 	private boolean tileBasedMovement;
@@ -18,6 +21,7 @@ public class TopdownController implements PlayerController2D {
 
 	public TopdownController(Inputs input, TileMap map, boolean tileBasedMovement) {
 		this.input = input;
+		this.keybinds = new Keybinds();
 		this.map = map;
 		this.tileBasedMovement = tileBasedMovement;
 		if (tileBasedMovement) {
@@ -41,11 +45,10 @@ public class TopdownController implements PlayerController2D {
 	        return;
 	    }
 
-		// TODO : make a keybinds class so that the settings can be modified at any key
-	    if (input.isKeyDown(GLFW.GLFW_KEY_A) || input.isControllerButtonDown(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT)) startMove(player, -1, 0);
-	    else if (input.isKeyDown(GLFW.GLFW_KEY_D) || input.isControllerButtonDown(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT)) startMove(player, 1, 0);
-	    else if (input.isKeyDown(GLFW.GLFW_KEY_W) || input.isControllerButtonDown(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP)) startMove(player, 0, -1);
-	    else if (input.isKeyDown(GLFW.GLFW_KEY_S) || input.isControllerButtonDown(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN)) startMove(player, 0, 1);
+	    if (keybinds.isDown(input, Action.MOVE_LEFT)) startMove(player, -1, 0);
+	    else if (keybinds.isDown(input, Action.MOVE_RIGHT)) startMove(player, 1, 0);
+	    else if (keybinds.isDown(input, Action.MOVE_UP)) startMove(player, 0, -1);
+	    else if (keybinds.isDown(input, Action.MOVE_DOWN)) startMove(player, 0, 1);
 	}
 
 	private void basicMovement(Player2D player, float dt) {
