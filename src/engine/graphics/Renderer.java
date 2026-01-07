@@ -118,8 +118,8 @@ public class Renderer {
 	}
 	
 	public void drawDialogBox(float x, float y, float w, float h) {
-	    Renderer.drawRect(x, y, w, h, 0f, 0f, 0f);      // background
-	    Renderer.drawRect(x+2, y+2, w-4, h-4, 1f, 1f, 1f); // border
+	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
+	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
 	}
 	
 	public void drawText(String text, float x, float y, int charW, int charH) {
