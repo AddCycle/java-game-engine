@@ -38,7 +38,7 @@ public class NamelessAdventure implements Game {
 	private int[] textures;
 	private World2D world;
 	private Scene2D scene;
-	
+
 	public NamelessAdventure(Engine engine) {
 		this.engine = engine;
 	}
@@ -49,92 +49,99 @@ public class NamelessAdventure implements Game {
 		textures[0] = engine.getRenderer().loadTexture("resources/grass.png");
 		textures[1] = engine.getRenderer().loadTexture("resources/water.png");
 
-		int[][] tiles = {
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		};
+		int[][] tiles = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
 
 		int tileSize = 16;
 		tilemap = new TileMap(tiles, textures, tileSize);
 //		world = new PlatformerWorld(tilemap);
 		world = new TopdownWorld(tilemap);
 
+		boolean tileBasedMovement = false;
 		if (world instanceof TopdownWorld) {
-		    controller = new TopdownController(engine.getInput(), tilemap);
-		    entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
+			controller = new TopdownController(engine.getInput(), tilemap, tileBasedMovement);
+			entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
 		} else if (world instanceof PlatformerWorld) {
-		    controller = new PlatformerController(engine.getInput());
-		    entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
+			controller = new PlatformerController(engine.getInput());
+			entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
 		}
 
+		/** Simple Player2D **/
 //		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
 //	    player = new Player2D(controller, playerTex);
 
+		/** This part is about AnimatedPlayer2D and some walking animations **/
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
-	    player = new AnimatedPlayer2D(controller);
-	    
-	    int tex0 = engine.getRenderer().loadTexture("resources/idle_down.png");
-	    int tex1 = engine.getRenderer().loadTexture("resources/down1.png");
-	    int tex2 = engine.getRenderer().loadTexture("resources/down2.png");
+		player = new AnimatedPlayer2D(controller);
 
-		Animation idleDown = new Animation(new int[]{tex0}, 0.2f, true);
-		Animation walkDown = new Animation(new int[]{tex1, tex2}, 0.2f, true);
-	    
-	    player.addAnimation("idle_down", idleDown);
-	    player.addAnimation("walk_down", walkDown);
+		int tex0 = engine.getRenderer().loadTexture("resources/idle_down.png");
+		int tex1 = engine.getRenderer().loadTexture("resources/down1.png");
+		int tex2 = engine.getRenderer().loadTexture("resources/down2.png");
 
-	    player.setStateMachine(e -> {
-	        AnimatedPlayer2D p = (AnimatedPlayer2D) e;
+		Animation idleDown = new Animation(new int[] { tex0 }, 0.2f, true);
+		Animation walkDown = new Animation(new int[] { tex1, tex2 }, 0.4f, true);
 
-	        if (!p.moving) {
-	        		Logger.debug("not moving the player");
-	            return "idle_" + p.facing.getName();
-	        }
-	        	Logger.debug("MOVING");
-	        return "walk_" + p.facing.getName();
-	    });
-	    
-	    if (world instanceof TopdownWorld) {
-	    		InteractibleNPC npc = PlayerInteractionTesting.createTestNPC();
-	    		entityManager.add(npc);
+		player.addAnimation("idle_down", idleDown);
+		player.addAnimation("walk_down", walkDown);
+
+		player.setStateMachine(e -> {
+			AnimatedPlayer2D p = (AnimatedPlayer2D) e;
+
+			if (tileBasedMovement) {
+				if (!p.moving) {
+					return "idle_" + p.facing.getName();
+				}
+				return "walk_" + p.facing.getName();
+			} else {
+				Logger.debug("vx, vy: %f, %f", p.vx, p.vy);
+				if (p.vx == 0 && p.vy == 0) {
+					return "idle_" + p.facing.getName();
+				}
+				return "walk_" + p.facing.getName();
+			}
+		});
+
+		if (world instanceof TopdownWorld) {
+			InteractibleNPC npc = PlayerInteractionTesting.createTestNPC();
+			entityManager.add(npc);
 		} else if (world instanceof PlatformerWorld) {
 			Entity coin = GameObjectsTesting.createTestCoin(player, entityManager);
 			entityManager.add(coin);
-	    }
+		}
 
-	    engine.getCamera().setFollowEntity(player);
-	    engine.getCamera().setWorld(world);
-	    
-	    scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);
-	    engine.getGameStateManager().set(new PlayState(scene), engine);
+		engine.getCamera().setFollowEntity(player);
+		engine.getCamera().setWorld(world);
 
-	    entityManager.add(player);
+		scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);
+		engine.getGameStateManager().set(new PlayState(scene), engine);
+
+		entityManager.add(player);
 	}
 
 	@Override
 	public void update(float dt) {
 		Inputs input = engine.getInput();
-		
+
 		if (input.isKeyJustPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			Logger.debug("switched to gamestate pause");
 			engine.getGameStateManager().push(new PauseState(), engine);
@@ -147,21 +154,22 @@ public class NamelessAdventure implements Game {
 
 		// switch between worlds at runtime
 		if (input.isKeyJustPressed(GLFW.GLFW_KEY_TAB)) {
-		    if (world instanceof TopdownWorld) {
-		        World2D platformerWorld = new PlatformerWorld(tilemap);
-		        PlayerController2D platformerController = new PlatformerController(input);
-		        scene.setWorld(platformerWorld, platformerController);
-		        entityManager.setPhysics(new PlatformerPhysics());
-		    } else {
-		        World2D tilemapWorld = new TopdownWorld(tilemap);
-		        PlayerController2D topDownController = new TopdownController(input, tilemap);
-		        scene.setWorld(tilemapWorld, topDownController);
-		        entityManager.setPhysics(new TopdownPhysics());
-		    }
-		    world = scene.getWorld();
+			if (world instanceof TopdownWorld) {
+				World2D platformerWorld = new PlatformerWorld(tilemap);
+				PlayerController2D platformerController = new PlatformerController(input);
+				scene.setWorld(platformerWorld, platformerController);
+				entityManager.setPhysics(new PlatformerPhysics());
+			} else {
+				World2D tilemapWorld = new TopdownWorld(tilemap);
+				PlayerController2D topDownController = new TopdownController(input, tilemap);
+				scene.setWorld(tilemapWorld, topDownController);
+				entityManager.setPhysics(new TopdownPhysics());
+			}
+			world = scene.getWorld();
 		}
 	}
 
 	@Override
-	public void render() {}
+	public void render() {
+	}
 }

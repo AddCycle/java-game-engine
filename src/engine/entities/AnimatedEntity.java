@@ -44,7 +44,6 @@ public class AnimatedEntity extends Entity {
 			String next = stateMachine.compute(this);
 			if (!next.equals(state) && animations.containsKey(next)) {
 				state = next;
-				Logger.debug("next state for entity : %s", next);
 				setAnimation(animations.get(next));
 			}
 		} else {
