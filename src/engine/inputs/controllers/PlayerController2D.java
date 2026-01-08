@@ -1,7 +1,7 @@
 package engine.inputs.controllers;
 
-import engine.entities.Player2D;
+import engine.entities.Entity;
 
 public interface PlayerController2D {
-	public void update(Player2D player, float dt);
+	public void update(Entity player, float dt);
 }

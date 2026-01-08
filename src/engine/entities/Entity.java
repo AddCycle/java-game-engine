@@ -16,6 +16,9 @@ public abstract class Entity {
 	public boolean onGround;
 	public Direction facing;
 	public boolean wantsToInteract;
+	public int tileX, tileY;
+	public int targetTileX, targetTileY;
+	public boolean moving = false;
 	
 	private final List<Consumer<Entity>> collisionListeners = new ArrayList<>();
 	public boolean markedForRemoval;

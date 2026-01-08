@@ -1,8 +1,6 @@
 package engine.inputs.controllers;
 
-import org.lwjgl.glfw.GLFW;
-
-import engine.entities.Player2D;
+import engine.entities.Entity;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;
@@ -19,7 +17,7 @@ public class PlatformerController implements PlayerController2D {
     }
 
     @Override
-    public void update(Player2D player, float dt) {
+    public void update(Entity player, float dt) {
         if (keybinds.isDown(input, Action.MOVE_LEFT)) player.vx = -speed;
         else if (keybinds.isDown(input, Action.MOVE_RIGHT)) player.vx = speed;
         else player.vx = 0;

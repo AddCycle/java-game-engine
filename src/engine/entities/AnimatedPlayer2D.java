@@ -1,18 +1,21 @@
 package engine.entities;
 
+import engine.core.Logger;
 import engine.graphics.Renderer;
 import engine.inputs.controllers.PlayerController2D;
 import engine.world.Camera;
 
-public class Player2D extends Entity {
+public class AnimatedPlayer2D extends AnimatedEntity {
 	private PlayerController2D controller;
+	public int tileX, tileY;
+	public int targetTileX, targetTileY;
 
-	public Player2D(PlayerController2D controller, int texture) {
-		this(controller, 0, 0, texture);
+	public AnimatedPlayer2D(PlayerController2D controller) {
+		this(controller, 0, 0, 16, 16);
 	}
 
-	public Player2D(PlayerController2D controller, float x, float y, int texture) {
-		super(x, y, 16, 16, texture);
+	public AnimatedPlayer2D(PlayerController2D controller, float x, float y, float width, float height) {
+		super(x, y, width, height);
 		this.controller = controller;
 	}
 
@@ -20,6 +23,8 @@ public class Player2D extends Entity {
 	public void update(float dt) {
 		if (controller != null)
 			controller.update(this, dt);
+		super.update(dt);
+		Logger.debug("facing: %s, state: %s", facing, state);
 	}
 
 	@Override

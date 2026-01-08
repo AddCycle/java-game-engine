@@ -15,5 +15,5 @@ public interface Scene2D {
     public void setWorld(World2D newWorld, PlayerController2D newController);
 	public World2D getWorld();
 	public List<Entity> getEntities();
-	public Player2D getPlayer();
+	public Entity getPlayer();
 }

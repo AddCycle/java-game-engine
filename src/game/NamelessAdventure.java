@@ -2,18 +2,19 @@ package game;
 
 import org.lwjgl.glfw.GLFW;
 
+import engine.animations.Animation;
 import engine.core.Engine;
 import engine.core.Game;
 import engine.core.Logger;
+import engine.entities.AnimatedPlayer2D;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
-import engine.entities.Player2D;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.inputs.controllers.PlatformerController;
 import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
-import engine.scene.Scene;
+import engine.scene.AnimatedPlayerScene;
 import engine.scene.Scene2D;
 import engine.state.menu.PauseState;
 import engine.state.play.PlayState;
@@ -32,7 +33,8 @@ public class NamelessAdventure implements Game {
 	private TileMap tilemap;
 	private EntityManager entityManager;
 	private PlayerController2D controller;
-	private Player2D player;
+//	private Player2D player;
+	private AnimatedPlayer2D player;
 	private int[] textures;
 	private World2D world;
 	private Scene2D scene;
@@ -85,8 +87,32 @@ public class NamelessAdventure implements Game {
 		    entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
 		}
 
+//		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
+//	    player = new Player2D(controller, playerTex);
+
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
-	    player = new Player2D(controller, playerTex);
+	    player = new AnimatedPlayer2D(controller);
+	    
+	    int tex0 = engine.getRenderer().loadTexture("resources/idle_down.png");
+	    int tex1 = engine.getRenderer().loadTexture("resources/down1.png");
+	    int tex2 = engine.getRenderer().loadTexture("resources/down2.png");
+
+		Animation idleDown = new Animation(new int[]{tex0}, 0.2f, true);
+		Animation walkDown = new Animation(new int[]{tex1, tex2}, 0.2f, true);
+	    
+	    player.addAnimation("idle_down", idleDown);
+	    player.addAnimation("walk_down", walkDown);
+
+	    player.setStateMachine(e -> {
+	        AnimatedPlayer2D p = (AnimatedPlayer2D) e;
+
+	        if (!p.moving) {
+	        		Logger.debug("not moving the player");
+	            return "idle_" + p.facing.getName();
+	        }
+	        	Logger.debug("MOVING");
+	        return "walk_" + p.facing.getName();
+	    });
 	    
 	    if (world instanceof TopdownWorld) {
 	    		InteractibleNPC npc = PlayerInteractionTesting.createTestNPC();
@@ -99,7 +125,7 @@ public class NamelessAdventure implements Game {
 	    engine.getCamera().setFollowEntity(player);
 	    engine.getCamera().setWorld(world);
 	    
-	    scene = new Scene(world, engine.getCamera(), player, entityManager);
+	    scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);
 	    engine.getGameStateManager().set(new PlayState(scene), engine);
 
 	    entityManager.add(player);

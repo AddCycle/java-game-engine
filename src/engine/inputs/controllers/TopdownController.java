@@ -1,7 +1,12 @@
 package engine.inputs.controllers;
 
-import static engine.entities.Direction.*;
-import engine.entities.Player2D;
+import static engine.entities.Direction.DOWN;
+import static engine.entities.Direction.LEFT;
+import static engine.entities.Direction.RIGHT;
+import static engine.entities.Direction.UP;
+
+import engine.entities.AnimatedPlayer2D;
+import engine.entities.Entity;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;
@@ -31,7 +36,7 @@ public class TopdownController implements PlayerController2D {
 	}
 
 	@Override
-	public void update(Player2D player, float dt) {
+	public void update(Entity player, float dt) {
 		if (tileBasedMovement)
 			tileMovement(player, dt);
 		else
@@ -43,7 +48,7 @@ public class TopdownController implements PlayerController2D {
 		}
 	}
 
-	private void tileMovement(Player2D player, float dt) {
+	private void tileMovement(Entity player, float dt) {
 		if (player.moving) {
 			moveToTarget(player, dt);
 			return;
@@ -64,7 +69,7 @@ public class TopdownController implements PlayerController2D {
 		}
 	}
 
-	private void basicMovement(Player2D player, float dt) {
+	private void basicMovement(Entity player, float dt) {
 		player.vx = 0;
 		player.vy = 0;
 
@@ -86,7 +91,7 @@ public class TopdownController implements PlayerController2D {
 		}
 	}
 
-	private void startMove(Player2D p, int dx, int dy) {
+	private void startMove(Entity p, int dx, int dy) {
 		p.targetTileX = p.tileX + dx;
 		p.targetTileY = p.tileY + dy;
 
@@ -96,7 +101,7 @@ public class TopdownController implements PlayerController2D {
 		p.moving = true;
 	}
 
-	private void moveToTarget(Player2D p, float dt) {
+	private void moveToTarget(Entity p, float dt) {
 		float targetX = p.targetTileX * map.getTileSize();
 		float targetY = p.targetTileY * map.getTileSize();
 
