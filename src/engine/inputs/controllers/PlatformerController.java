@@ -11,9 +11,9 @@ public class PlatformerController implements PlayerController2D {
     private float speed = 120f;
     private float jumpSpeed = 450f;
 
-    public PlatformerController(Inputs input) {
+    public PlatformerController(Inputs input, Keybinds keybinds) {
         this.input = input;
-        this.keybinds = new Keybinds();
+        this.keybinds = keybinds;
     }
 
     @Override

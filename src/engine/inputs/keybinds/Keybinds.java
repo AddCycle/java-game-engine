@@ -10,8 +10,8 @@ import engine.inputs.action.Action;
 
 // FIXME : need to separate the actions between topdown world and platformer world, so between worlds
 public class Keybinds {
-	private Map<Action, Integer> keys = new HashMap<>();
-    private Map<Action, Integer> padButtons = new HashMap<>();
+	protected Map<Action, Integer> keys = new HashMap<>();
+    protected Map<Action, Integer> padButtons = new HashMap<>();
 
     public Keybinds() {
         keys.put(Action.MOVE_LEFT, GLFW.GLFW_KEY_A);

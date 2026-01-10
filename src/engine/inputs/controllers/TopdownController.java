@@ -10,6 +10,7 @@ import engine.entities.Entity;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;
+import engine.inputs.keybinds.TopdownKeybinds;
 import engine.world.TileMap;
 
 public class TopdownController implements PlayerController2D {
@@ -19,13 +20,13 @@ public class TopdownController implements PlayerController2D {
 	private TileMap map;
 	private boolean tileBasedMovement;
 
-	public TopdownController(Inputs input, TileMap map) {
-		this(input, map, true);
+	public TopdownController(Inputs input, Keybinds keybinds, TileMap map) {
+		this(input, keybinds, map, true);
 	}
 
-	public TopdownController(Inputs input, TileMap map, boolean tileBasedMovement) {
+	public TopdownController(Inputs input, Keybinds keybinds, TileMap map, boolean tileBasedMovement) {
 		this.input = input;
-		this.keybinds = new Keybinds();
+		this.keybinds = keybinds;
 		this.map = map;
 		this.tileBasedMovement = tileBasedMovement;
 		if (tileBasedMovement) {

@@ -6,5 +6,6 @@ public enum Action {
     MOVE_UP,
     MOVE_DOWN,
     JUMP,
-    INTERACT
+    INTERACT,
+    CONFIRM;
 }

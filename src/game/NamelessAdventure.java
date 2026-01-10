@@ -14,6 +14,8 @@ import engine.inputs.Inputs;
 import engine.inputs.controllers.PlatformerController;
 import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
+import engine.inputs.keybinds.PlatformerKeybinds;
+import engine.inputs.keybinds.TopdownKeybinds;
 import engine.scene.AnimatedPlayerScene;
 import engine.scene.Scene2D;
 import engine.state.menu.PauseState;
@@ -79,10 +81,10 @@ public class NamelessAdventure implements Game {
 
 		boolean tileBasedMovement = true;
 		if (world instanceof TopdownWorld) {
-			controller = new TopdownController(engine.getInput(), tilemap, tileBasedMovement);
+			controller = new TopdownController(engine.getInput(), new TopdownKeybinds(), tilemap, tileBasedMovement);
 			entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
 		} else if (world instanceof PlatformerWorld) {
-			controller = new PlatformerController(engine.getInput());
+			controller = new PlatformerController(engine.getInput(), new PlatformerKeybinds());
 			entityManager = new EntityManager(engine.getCamera(), new PlatformerPhysics());
 		}
 
@@ -91,7 +93,7 @@ public class NamelessAdventure implements Game {
 //	    player = new Player2D(controller, playerTex);
 
 		/** This part is about AnimatedPlayer2D and some walking animations **/
-		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
+//		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
 		player = new AnimatedPlayer2D(controller);
 
 		int idle_down = engine.getRenderer().loadTexture("resources/idle_down.png");
@@ -181,12 +183,12 @@ public class NamelessAdventure implements Game {
 		if (input.isKeyJustPressed(GLFW.GLFW_KEY_TAB)) {
 			if (world instanceof TopdownWorld) {
 				World2D platformerWorld = new PlatformerWorld(tilemap);
-				PlayerController2D platformerController = new PlatformerController(input);
+				PlayerController2D platformerController = new PlatformerController(input, new PlatformerKeybinds());
 				scene.setWorld(platformerWorld, platformerController);
 				entityManager.setPhysics(new PlatformerPhysics());
 			} else {
 				World2D tilemapWorld = new TopdownWorld(tilemap);
-				PlayerController2D topDownController = new TopdownController(input, tilemap);
+				PlayerController2D topDownController = new TopdownController(input, new TopdownKeybinds(), tilemap);
 				scene.setWorld(tilemapWorld, topDownController);
 				entityManager.setPhysics(new TopdownPhysics());
 			}

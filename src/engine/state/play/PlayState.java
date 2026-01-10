@@ -6,6 +6,8 @@ import engine.entities.interaction.InteractionResult;
 import engine.entities.interaction.InteractionSystem;
 import engine.entities.interaction.InteractionType;
 import engine.graphics.Renderer;
+import engine.inputs.keybinds.DialogKeybinds;
+import engine.inputs.keybinds.Keybinds;
 import engine.scene.Scene2D;
 import engine.state.GameState;
 import engine.state.dialog.DialogState;
@@ -49,7 +51,7 @@ public class PlayState implements GameState {
 
 	    if (result.type() == InteractionType.DIALOG) {
 	        engine.getGameStateManager().push(
-	            new DialogState(result.text()), engine
+	            new DialogState(result.text(), new DialogKeybinds()), engine
 	        );
 	    }
 	}

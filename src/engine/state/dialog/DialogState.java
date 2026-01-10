@@ -1,17 +1,19 @@
 package engine.state.dialog;
 
-import org.lwjgl.glfw.GLFW;
-
 import engine.core.Engine;
 import engine.graphics.Renderer;
+import engine.inputs.action.Action;
+import engine.inputs.keybinds.Keybinds;
 import engine.state.GameState;
 
 public class DialogState implements GameState {
 	private Engine engine;
 	private String text;
+	private Keybinds keybinds;
 	
-	public DialogState(String text) {
+	public DialogState(String text, Keybinds keybinds) {
 		this.text = text;
+		this.keybinds = keybinds;
 	}
 
 	@Override
@@ -21,9 +23,7 @@ public class DialogState implements GameState {
 
 	@Override
 	public void update(float dt) {
-		// FIXME : replace with keybinds
-		if (engine.getInput().isKeyJustPressed(GLFW.GLFW_KEY_ENTER) ||
-			engine.getInput().isPadButtonJustPressed(GLFW.GLFW_GAMEPAD_BUTTON_B)) {
+		if (keybinds.isJustPressed(engine.getInput(), Action.CONFIRM)) {
             engine.getGameStateManager().pop();
         }
 	}
@@ -41,9 +41,4 @@ public class DialogState implements GameState {
 
 	@Override
 	public void dispose() {}
-	
-	@Override
-	public boolean blocksRenderBelow() {
-		return false;
-	}
 }
