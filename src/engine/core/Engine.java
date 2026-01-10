@@ -69,8 +69,8 @@ public class Engine {
             gsm.update(dt);
             game.update(dt);
 
-            gsm.render(renderer);
             game.render();
+            gsm.render(renderer);
             window.swapBuffers();
             
 		}

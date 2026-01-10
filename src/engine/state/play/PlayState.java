@@ -53,4 +53,9 @@ public class PlayState implements GameState {
 	        );
 	    }
 	}
+	
+	@Override
+	public boolean blocksRenderBelow() {
+		return false;
+	}
 }

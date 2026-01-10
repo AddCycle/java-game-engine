@@ -2,6 +2,7 @@ package engine.state;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 
 import engine.core.Engine;
 import engine.graphics.Renderer;
@@ -14,30 +15,37 @@ public class GameStateManager {
 		states.addFirst(state);
 		state.init(engine);
 	}
-	
+
 	public void pop() {
-        GameState removed = states.pollFirst();
-        if (removed != null) removed.dispose();
-    }
+		GameState removed = states.pollFirst();
+		if (removed != null)
+			removed.dispose();
+	}
 
-    public void set(GameState state, Engine engine) {
-        while (!states.isEmpty()) pop();
-        push(state, engine);
-    }
+	public void set(GameState state, Engine engine) {
+		while (!states.isEmpty())
+			pop();
+		push(state, engine);
+	}
 
-    public void update(float dt) {
-        if (!states.isEmpty()) {
-        		states.peekFirst().update(dt);
-        }
-    }
+	public void update(float dt) {
+		if (!states.isEmpty()) {
+			states.peekFirst().update(dt);
+		}
+	}
 
-    public void render(Renderer renderer) {
-        if (!states.isEmpty()) {
-        		states.peekFirst().render(renderer);
-        }
-    }
+	public void render(Renderer renderer) {
+		Iterator<GameState> it = states.descendingIterator(); // bottom → top
+		while (it.hasNext()) {
+			GameState state = it.next();
+			state.render(renderer);
+			if (state.blocksRenderBelow()) {
+				break;
+			}
+		}
+	}
 
-    public GameState peek() {
-        return states.peekFirst();
-    }
+	public GameState peek() {
+		return states.peekFirst();
+	}
 }
