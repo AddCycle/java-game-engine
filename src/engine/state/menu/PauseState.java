@@ -1,15 +1,20 @@
 package engine.state.menu;
 
-import org.lwjgl.glfw.GLFW;
-
 import engine.core.Engine;
 import engine.core.Logger;
 import engine.graphics.Renderer;
 import engine.inputs.Inputs;
+import engine.inputs.action.Action;
+import engine.inputs.keybinds.Keybinds;
 import engine.state.GameState;
 
 public class PauseState implements GameState {
 	private Engine engine;
+	private Keybinds keybinds;
+	
+	public PauseState(Keybinds keybinds) {
+		this.keybinds = keybinds;
+	}
 
 	@Override
 	public void init(Engine engine) {
@@ -20,12 +25,12 @@ public class PauseState implements GameState {
 	public void update(float dt) {
 		Inputs input = engine.getInput();
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_ENTER)) {
+		if (keybinds.isJustPressed(input, Action.RESUME)) {
 			Logger.debug("poped gamestate pause");
 			engine.getGameStateManager().pop();
 		}
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_ESCAPE)) {
+		if (keybinds.isJustPressed(input, Action.QUIT)) {
 			Logger.debug("poped gamestate pause");
 			engine.getGameStateManager().pop();
 			engine.stop();
@@ -34,9 +39,9 @@ public class PauseState implements GameState {
 
 	@Override
 	public void render(Renderer renderer) {
-		float w = engine.getWindow().width;
-		float h = engine.getWindow().height;
-		Renderer.drawRect(0, 0, w, h, 0.5f, 0.5f, 1.0f);
+		float w = engine.getCamera().width;
+		float h = engine.getCamera().height;
+		renderer.drawTextCenteredInBounds("GAME PAUSED", w, h);
 	}
 
 	@Override

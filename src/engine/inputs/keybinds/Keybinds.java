@@ -39,11 +39,11 @@ public class Keybinds {
 
     public boolean isDown(Inputs input, Action action) {
         return input.isKeyDown(keys.get(action))
-            || input.isPadButtonDown(padButtons.get(action));
+            || (padButtons.get(action) != null ? input.isPadButtonDown(padButtons.get(action)) : false);
     }
 
     public boolean isJustPressed(Inputs input, Action action) {
         return input.isKeyJustPressed(keys.get(action))
-            || input.isPadButtonDown(padButtons.get(action));
+            || (padButtons.get(action) != null ? input.isPadButtonJustPressed(padButtons.get(action)) : false);
     }
 }

@@ -7,5 +7,12 @@ public enum Action {
     MOVE_DOWN,
     JUMP,
     INTERACT,
-    CONFIRM;
+    CONFIRM,
+
+    // general actions
+    TAB,
+    FULLSCREEN,
+    PAUSE,
+    RESUME,
+    QUIT;
 }

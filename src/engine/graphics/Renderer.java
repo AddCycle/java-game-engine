@@ -121,6 +121,42 @@ public class Renderer {
 	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
 	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
 	}
+
+	public void drawTextCenteredH(String text, float x, float y, int charW, int charH) {
+		float textW = text.length() * charW;
+
+		float x1 = x - textW / 2f;
+
+		drawText(text, x1, y, charW, charH);
+	}
+
+	public void drawTextCenteredV(String text, float x, float y, int charW, int charH) {
+		float y1 = y - charH / 2f;
+
+		drawText(text, x, y1, charW, charH);
+	}
+
+	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
+		float textW = text.length() * charW;
+
+		float x1 = x - textW / 2f;
+		float y1 = y - charH / 2f;
+		
+		drawText(text, x1, y1, charW, charH);
+	}
+	
+	public void drawTextCenteredInBounds(String text, float width, float height) {
+		int charW = 8;
+		int charH = 8;
+
+		float textW = text.length() * charW;
+		float textH = charH;
+
+		float x = width / 2f - textW / 2f;
+		float y = height / 2f - textH / 2f;
+
+		drawText(text, x, y, charW, charH);
+	}
 	
 	public void drawText(String text, float x, float y, int charW, int charH) {
 	    float startX = x;

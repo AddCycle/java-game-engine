@@ -1,7 +1,5 @@
 package game;
 
-import org.lwjgl.glfw.GLFW;
-
 import engine.animations.Animation;
 import engine.core.Engine;
 import engine.core.Game;
@@ -11,9 +9,13 @@ import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
+import engine.inputs.action.Action;
 import engine.inputs.controllers.PlatformerController;
 import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
+import engine.inputs.keybinds.GeneralKeybinds;
+import engine.inputs.keybinds.Keybinds;
+import engine.inputs.keybinds.PauseKeybinds;
 import engine.inputs.keybinds.PlatformerKeybinds;
 import engine.inputs.keybinds.TopdownKeybinds;
 import engine.scene.AnimatedPlayerScene;
@@ -35,6 +37,7 @@ public class NamelessAdventure implements Game {
 	private TileMap tilemap;
 	private EntityManager entityManager;
 	private PlayerController2D controller;
+	private Keybinds generalKeys;
 //	private Player2D player;
 	private AnimatedPlayer2D player;
 	private int[] textures;
@@ -47,6 +50,8 @@ public class NamelessAdventure implements Game {
 
 	@Override
 	public void init() {
+		generalKeys = new GeneralKeybinds();
+
 		textures = new int[2];
 		textures[0] = engine.getRenderer().loadTexture("resources/grass.png");
 		textures[1] = engine.getRenderer().loadTexture("resources/water.png");
@@ -169,18 +174,18 @@ public class NamelessAdventure implements Game {
 	public void update(float dt) {
 		Inputs input = engine.getInput();
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_ESCAPE)) {
+		if (generalKeys.isJustPressed(input, Action.PAUSE)) {
 			Logger.debug("switched to gamestate pause");
-			engine.getGameStateManager().push(new PauseState(), engine);
+			engine.getGameStateManager().push(new PauseState(new PauseKeybinds()), engine);
 		}
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_F11)) {
+		if (generalKeys.isJustPressed(input, Action.FULLSCREEN)) {
 			Window window = engine.getWindow();
 			window.setFullScreen(!window.isFullscreen());
 		}
 
 		// switch between worlds at runtime
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_TAB)) {
+		if (generalKeys.isJustPressed(input, Action.TAB)) {
 			if (world instanceof TopdownWorld) {
 				World2D platformerWorld = new PlatformerWorld(tilemap);
 				PlayerController2D platformerController = new PlatformerController(input, new PlatformerKeybinds());

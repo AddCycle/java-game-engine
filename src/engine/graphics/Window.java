@@ -47,7 +47,9 @@ public class Window {
 		GLFW.glfwShowWindow(window);
 
 		// resize callback
-		GLFW.glfwSetFramebufferSizeCallback(window, (w, width, height) -> {
+		GLFW.glfwSetFramebufferSizeCallback(window, (_, width, height) -> {
+			this.width = width;
+		    this.height = height;
 		    renderer.updateViewport(width, height);
 		});
 
