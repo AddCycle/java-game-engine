@@ -77,7 +77,7 @@ public class NamelessAdventure implements Game {
 //		world = new PlatformerWorld(tilemap);
 		world = new TopdownWorld(tilemap);
 
-		boolean tileBasedMovement = false;
+		boolean tileBasedMovement = true;
 		if (world instanceof TopdownWorld) {
 			controller = new TopdownController(engine.getInput(), tilemap, tileBasedMovement);
 			entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
@@ -94,31 +94,55 @@ public class NamelessAdventure implements Game {
 		int playerTex = engine.getRenderer().loadTexture("resources/player.png");
 		player = new AnimatedPlayer2D(controller);
 
-		int tex0 = engine.getRenderer().loadTexture("resources/idle_down.png");
-		int tex1 = engine.getRenderer().loadTexture("resources/down1.png");
-		int tex2 = engine.getRenderer().loadTexture("resources/down2.png");
+		int idle_down = engine.getRenderer().loadTexture("resources/idle_down.png");
+		int down1 = engine.getRenderer().loadTexture("resources/down1.png");
+		int down2 = engine.getRenderer().loadTexture("resources/down2.png");
 
-		Animation idleDown = new Animation(new int[] { tex0 }, 0.2f, true);
-		Animation walkDown = new Animation(new int[] { tex1, tex2 }, 0.4f, true);
+		int idle_up = engine.getRenderer().loadTexture("resources/idle_up.png");
+		int up1 = engine.getRenderer().loadTexture("resources/up1.png");
+		int up2 = engine.getRenderer().loadTexture("resources/up2.png");
+
+		int idle_left = engine.getRenderer().loadTexture("resources/idle_left.png");
+		int left1 = engine.getRenderer().loadTexture("resources/left1.png");
+		int left2 = engine.getRenderer().loadTexture("resources/left2.png");
+
+		int idle_right = engine.getRenderer().loadTexture("resources/idle_right.png");
+		int right1 = engine.getRenderer().loadTexture("resources/right1.png");
+		int right2 = engine.getRenderer().loadTexture("resources/right2.png");
+
+		Animation idleDown = new Animation(new int[] { idle_down }, 0.2f, true);
+		Animation walkDown = new Animation(new int[] { down1, down2 }, 0.4f, true);
+
+		Animation idleUp = new Animation(new int[] { idle_up }, 0.2f, true);
+		Animation walkUp = new Animation(new int[] { up1, up2 }, 0.4f, true);
+
+		Animation idleLeft = new Animation(new int[] { idle_left }, 0.2f, true);
+		Animation walkLeft = new Animation(new int[] { left1, left2 }, 0.4f, true);
+
+		Animation idleRight = new Animation(new int[] { idle_right }, 0.2f, true);
+		Animation walkRight = new Animation(new int[] { right1, right2 }, 0.4f, true);
 
 		player.addAnimation("idle_down", idleDown);
 		player.addAnimation("walk_down", walkDown);
 
+		player.addAnimation("idle_up", idleUp);
+		player.addAnimation("walk_up", walkUp);
+
+		player.addAnimation("idle_left", idleLeft);
+		player.addAnimation("walk_left", walkLeft);
+
+		player.addAnimation("idle_right", idleRight);
+		player.addAnimation("walk_right", walkRight);
+
 		player.setStateMachine(e -> {
 			AnimatedPlayer2D p = (AnimatedPlayer2D) e;
 
-			if (tileBasedMovement) {
-				if (!p.moving) {
-					return "idle_" + p.facing.getName();
-				}
-				return "walk_" + p.facing.getName();
-			} else {
-				Logger.debug("vx, vy: %f, %f", p.vx, p.vy);
-				if (p.vx == 0 && p.vy == 0) {
-					return "idle_" + p.facing.getName();
-				}
-				return "walk_" + p.facing.getName();
-			}
+			String dir = p.facing.getName();
+
+			boolean isMoving = tileBasedMovement ? p.moving : (p.vx != 0 || p.vy != 0);
+			Logger.debug("vx, vy: %f, %f", p.vx, p.vy);
+
+			return (isMoving ? "walk_" : "idle_") + dir;
 		});
 
 		if (world instanceof TopdownWorld) {
@@ -129,7 +153,8 @@ public class NamelessAdventure implements Game {
 			entityManager.add(coin);
 		}
 
-		engine.getCamera().setFollowEntity(player);
+		float smoothingFactor = 0.1f;
+		engine.getCamera().setFollowEntity(player, smoothingFactor);
 		engine.getCamera().setWorld(world);
 
 		scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);

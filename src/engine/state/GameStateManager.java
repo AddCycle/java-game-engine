@@ -26,11 +26,15 @@ public class GameStateManager {
     }
 
     public void update(float dt) {
-        if (!states.isEmpty()) states.peekFirst().update(dt);
+        if (!states.isEmpty()) {
+        		states.peekFirst().update(dt);
+        }
     }
 
     public void render(Renderer renderer) {
-        if (!states.isEmpty()) states.peekFirst().render(renderer);
+        if (!states.isEmpty()) {
+        		states.peekFirst().render(renderer);
+        }
     }
 
     public GameState peek() {

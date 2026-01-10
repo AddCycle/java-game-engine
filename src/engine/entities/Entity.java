@@ -69,7 +69,7 @@ public abstract class Entity {
 
         return new Rectangle.Float(ix, iy, range, range);
     }
-    
+
 	public void tryInteract() {
 		this.wantsToInteract = true;
 	}

@@ -40,7 +40,10 @@ public class DialogState implements GameState {
 	}
 
 	@Override
-	public void dispose() {
-		
+	public void dispose() {}
+	
+	@Override
+	public boolean blocksRenderBelow() {
+		return false;
 	}
 }
