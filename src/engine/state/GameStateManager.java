@@ -29,9 +29,17 @@ public class GameStateManager {
 	}
 
 	public void update(float dt) {
-		if (!states.isEmpty()) {
-			states.peekFirst().update(dt);
-		}
+//		if (!states.isEmpty()) {
+//			states.peekFirst().update(dt);
+//		}
+		Iterator<GameState> it = states.iterator(); // top → bottom
+	    while (it.hasNext()) {
+	        GameState state = it.next();
+	        state.update(dt);
+	        if (state.blocksUpdateBelow()) {
+	            break;
+	        }
+	    }
 	}
 
 	public void render(Renderer renderer) {

@@ -8,7 +8,9 @@ import org.lwjgl.glfw.GLFW;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 
-// FIXME : need to separate the actions between topdown world and platformer world, so between worlds
+/**
+ * Just a placeholder class constructor to give an sample on how to bind actions to keys
+ */
 public class Keybinds {
 	protected Map<Action, Integer> keys = new HashMap<>();
     protected Map<Action, Integer> padButtons = new HashMap<>();

@@ -1,23 +1,31 @@
 package engine.state.play;
 
 import engine.core.Engine;
+import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.interaction.InteractionResult;
 import engine.entities.interaction.InteractionSystem;
 import engine.entities.interaction.InteractionType;
 import engine.graphics.Renderer;
+import engine.graphics.Window;
+import engine.inputs.Inputs;
+import engine.inputs.action.Action;
 import engine.inputs.keybinds.DialogKeybinds;
 import engine.inputs.keybinds.Keybinds;
+import engine.inputs.keybinds.PauseKeybinds;
 import engine.scene.Scene2D;
 import engine.state.GameState;
 import engine.state.dialog.DialogState;
+import engine.state.menu.PauseState;
 
 public class PlayState implements GameState {
 	private Engine engine;
 	private Scene2D scene;
+	private Keybinds keybinds;
 	
-	public PlayState(Scene2D scene) {
+	public PlayState(Scene2D scene, Keybinds keybinds) {
         this.scene = scene; // pass the scene you already have
+        this.keybinds = keybinds;
     }
 
 	@Override
@@ -27,6 +35,8 @@ public class PlayState implements GameState {
 
 	@Override
 	public void update(float dt) {
+		Inputs input = engine.getInput();
+
 		scene.update(dt);
 		
 		Entity player = scene.getPlayer();
@@ -36,6 +46,11 @@ public class PlayState implements GameState {
 	        handleInteraction(result);
 	        player.wantsToInteract = false;
 	    }
+
+		if (keybinds.isJustPressed(input, Action.PAUSE)) {
+			Logger.debug("switched to gamestate pause");
+			engine.getGameStateManager().push(new PauseState(new PauseKeybinds()), engine);
+		}
 	}
 
 	@Override
@@ -46,6 +61,11 @@ public class PlayState implements GameState {
 	@Override
 	public void dispose() {}
 
+	@Override
+	public boolean blocksRenderBelow() {
+		return false;
+	}
+
 	private void handleInteraction(InteractionResult result) {
 		if (result == null) return;
 
@@ -54,10 +74,5 @@ public class PlayState implements GameState {
 	            new DialogState(result.text(), new DialogKeybinds()), engine
 	        );
 	    }
-	}
-	
-	@Override
-	public boolean blocksRenderBelow() {
-		return false;
 	}
 }

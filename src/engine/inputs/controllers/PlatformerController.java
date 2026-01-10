@@ -27,5 +27,4 @@ public class PlatformerController implements PlayerController2D {
             player.onGround = false;
         }
     }
-
 }

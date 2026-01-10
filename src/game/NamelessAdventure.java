@@ -15,12 +15,11 @@ import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
 import engine.inputs.keybinds.GeneralKeybinds;
 import engine.inputs.keybinds.Keybinds;
-import engine.inputs.keybinds.PauseKeybinds;
 import engine.inputs.keybinds.PlatformerKeybinds;
+import engine.inputs.keybinds.PlayKeybinds;
 import engine.inputs.keybinds.TopdownKeybinds;
 import engine.scene.AnimatedPlayerScene;
 import engine.scene.Scene2D;
-import engine.state.menu.PauseState;
 import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
 import engine.world.TileMap;
@@ -165,7 +164,7 @@ public class NamelessAdventure implements Game {
 		engine.getCamera().setWorld(world);
 
 		scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);
-		engine.getGameStateManager().set(new PlayState(scene), engine);
+		engine.getGameStateManager().set(new PlayState(scene, new PlayKeybinds()), engine);
 
 		entityManager.add(player);
 	}
@@ -173,11 +172,6 @@ public class NamelessAdventure implements Game {
 	@Override
 	public void update(float dt) {
 		Inputs input = engine.getInput();
-
-		if (generalKeys.isJustPressed(input, Action.PAUSE)) {
-			Logger.debug("switched to gamestate pause");
-			engine.getGameStateManager().push(new PauseState(new PauseKeybinds()), engine);
-		}
 
 		if (generalKeys.isJustPressed(input, Action.FULLSCREEN)) {
 			Window window = engine.getWindow();
