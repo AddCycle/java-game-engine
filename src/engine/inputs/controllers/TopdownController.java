@@ -5,30 +5,31 @@ import static engine.entities.Direction.LEFT;
 import static engine.entities.Direction.RIGHT;
 import static engine.entities.Direction.UP;
 
-import engine.entities.AnimatedPlayer2D;
 import engine.entities.Entity;
+import engine.entities.EntityManager;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;
-import engine.inputs.keybinds.TopdownKeybinds;
-import engine.world.TileMap;
+import engine.world.map.TileMap;
 
 public class TopdownController implements PlayerController2D {
 	private Inputs input;
 	private Keybinds keybinds;
 	private float speed;
 	private TileMap map;
+	private EntityManager entityManager;
 	private boolean tileBasedMovement;
 
-	public TopdownController(Inputs input, Keybinds keybinds, TileMap map) {
-		this(input, keybinds, map, true);
+	public TopdownController(Inputs input, Keybinds keybinds, TileMap map, EntityManager entityManager) {
+		this(input, keybinds, map, entityManager, true);
 	}
 
-	public TopdownController(Inputs input, Keybinds keybinds, TileMap map, boolean tileBasedMovement) {
+	public TopdownController(Inputs input, Keybinds keybinds, TileMap map, EntityManager entityManager, boolean tileBasedMovement) {
 		this.input = input;
 		this.keybinds = keybinds;
 		this.map = map;
 		this.tileBasedMovement = tileBasedMovement;
+		this.entityManager = entityManager;
 		if (tileBasedMovement) {
 			speed = 30f;
 		} else {
@@ -93,11 +94,15 @@ public class TopdownController implements PlayerController2D {
 	}
 
 	private void startMove(Entity p, int dx, int dy) {
-		p.targetTileX = p.tileX + dx;
-		p.targetTileY = p.tileY + dy;
+		int tx = p.tileX + dx;
+	    int ty = p.tileY + dy;
+		p.targetTileX = tx;
+		p.targetTileY = ty;
 
 		if (map.isSolid(p.targetTileX, p.targetTileY))
 			return;
+		
+		if (entityManager.isEntityBlockingTile(tx, ty, p, map)) return;
 
 		p.moving = true;
 	}

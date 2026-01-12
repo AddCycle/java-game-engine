@@ -7,7 +7,6 @@ import engine.entities.interaction.InteractionResult;
 import engine.entities.interaction.InteractionSystem;
 import engine.entities.interaction.InteractionType;
 import engine.graphics.Renderer;
-import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.DialogKeybinds;

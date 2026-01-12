@@ -1,6 +1,5 @@
 package engine.entities;
 
-import engine.core.Logger;
 import engine.graphics.Renderer;
 import engine.inputs.controllers.PlayerController2D;
 import engine.world.Camera;
@@ -17,6 +16,7 @@ public class AnimatedPlayer2D extends AnimatedEntity {
 	public AnimatedPlayer2D(PlayerController2D controller, float x, float y, float width, float height) {
 		super(x, y, width, height);
 		this.controller = controller;
+		this.solid = true;
 	}
 
 	@Override
@@ -24,7 +24,6 @@ public class AnimatedPlayer2D extends AnimatedEntity {
 		if (controller != null)
 			controller.update(this, dt);
 		super.update(dt);
-		Logger.debug("facing: %s, state: %s", facing, state);
 	}
 
 	@Override

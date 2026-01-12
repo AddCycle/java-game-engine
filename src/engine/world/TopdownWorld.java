@@ -1,9 +1,12 @@
 package engine.world;
 
 import engine.graphics.Renderer;
+import engine.world.map.TileMap;
+import engine.world.map.TileMapRenderer;
 
 public class TopdownWorld implements World2D {
 	private TileMap map;
+	private TileMapRenderer tileMapRenderer = new TileMapRenderer();
 	
 	public TopdownWorld(TileMap map) {
 		this.map = map;
@@ -17,7 +20,7 @@ public class TopdownWorld implements World2D {
 
 	@Override
 	public void render(Renderer renderer, Camera cam) {
-		map.render(renderer, 1, cam);
+		tileMapRenderer.render(map, renderer, cam);
 	}
 
 	@Override

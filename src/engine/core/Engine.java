@@ -8,6 +8,7 @@ import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
+import engine.state.GameState;
 import engine.state.GameStateManager;
 import engine.world.Camera;
 
@@ -40,6 +41,10 @@ public class Engine {
 		this.game = game;
 	}
 	
+	public void setState(GameState state) {
+	    gsm.set(state, this);
+	}
+	
 	public void run() {
 		window.create(renderer);
 
@@ -69,7 +74,6 @@ public class Engine {
             gsm.update(dt);
             game.update(dt);
 
-            game.render();
             gsm.render(renderer);
             window.swapBuffers();
             

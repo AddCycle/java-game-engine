@@ -2,6 +2,7 @@ package entities.interaction;
 
 import engine.core.Logger;
 import engine.entities.Entity;
+import engine.entities.body.BodyType;
 import engine.entities.interaction.Interactible;
 import engine.entities.interaction.InteractionResult;
 import engine.entities.interaction.InteractionType;
@@ -12,6 +13,8 @@ public class InteractibleNPC extends Entity implements Interactible {
 
 	public InteractibleNPC(float x, float y, float width, float height, int texture) {
 		super(x, y, width, height, texture);
+		this.solid = true;
+		this.bodyType = BodyType.STATIC;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import engine.entities.body.BodyType;
 import engine.graphics.Renderer;
 import engine.world.Camera;
 
@@ -19,6 +20,8 @@ public abstract class Entity {
 	public int tileX, tileY;
 	public int targetTileX, targetTileY;
 	public boolean moving = false;
+	public boolean solid = false;
+	public BodyType bodyType = BodyType.DYNAMIC;
 	
 	private final List<Consumer<Entity>> collisionListeners = new ArrayList<>();
 	public boolean markedForRemoval;

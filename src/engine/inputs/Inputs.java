@@ -18,7 +18,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;
 
 import engine.core.Logger;
-import engine.inputs.action.Action;
 
 public class Inputs {
 	private long window;
@@ -172,23 +171,6 @@ public class Inputs {
 	public boolean isPadButtonJustPressed(int button) {
 	    return padButtons[button] && !prevPadButtons[button];
 	}
-
-//	// Poll gamepads/controllers
-//	public boolean isControllerButtonDown(int jid, int button) {
-//		if (glfwJoystickPresent(jid)) {
-//			GLFWGamepadState state = GLFWGamepadState.create();
-//			if (GLFW.glfwJoystickIsGamepad(jid)) {
-//				GLFW.glfwGetGamepadState(jid, state);
-//				return state.buttons(button) == GLFW.GLFW_PRESS;
-//			} else {
-//				ByteBuffer buttons = glfwGetJoystickButtons(jid);
-//				if (buttons != null && button < buttons.limit()) {
-//					return buttons.get(button) == GLFW.GLFW_PRESS;
-//				}
-//			}
-//		}
-//		return false;
-//	}
 
 	public float getControllerAxis(int jid, int axis) {
 		if (glfwJoystickPresent(jid)) {

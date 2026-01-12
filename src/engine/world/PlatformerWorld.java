@@ -1,6 +1,7 @@
 package engine.world;
 
 import engine.graphics.Renderer;
+import engine.world.map.TileMap;
 
 public class PlatformerWorld implements World2D {
 	private TileMap map;
@@ -20,7 +21,7 @@ public class PlatformerWorld implements World2D {
 
 	@Override
 	public void render(Renderer renderer, Camera camera) {
-		map.render(renderer, 1, camera);
+//		map.render(renderer, 1, camera);
 	}
 
 	@Override

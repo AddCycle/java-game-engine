@@ -14,6 +14,7 @@ public class Player2D extends Entity {
 	public Player2D(PlayerController2D controller, float x, float y, int texture) {
 		super(x, y, 16, 16, texture);
 		this.controller = controller;
+		this.solid = true;
 	}
 
 	@Override
