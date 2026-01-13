@@ -31,12 +31,16 @@ public class Engine {
 
 	private boolean vsync;
 	private boolean fullscreen;
+	private boolean debug;
+	private int debugKey = GLFW.GLFW_KEY_0;
 
 	public Engine(Builder builder) {
 		this.vsync = builder.vsync;
 		this.fullscreen = builder.fullscreen;
-		if (builder.debug)
+		if (builder.debug) {
 			Logger.setLevel(Level.DEBUG);
+			debug = builder.debug;
+		}
 
 		window = new Window(builder.width, builder.height, builder.title, builder.icon);
 		loader = new Loader();
@@ -85,6 +89,10 @@ public class Engine {
 			imgui.begin();
 			inputs.update();
 			window.pollEvents();
+			
+			if (inputs.isKeyJustPressed(debugKey)) {
+				debug = !debug;
+			}
 
 			camera.update(dt);
 
@@ -93,7 +101,7 @@ public class Engine {
 
 			gsm.render(renderer);
 
-			drawDebugUI(parallaxSpeed, showGrid);
+			if (debug) drawDebugUI(parallaxSpeed, showGrid);
 			imgui.end();
 
 			window.swapBuffers();
@@ -198,5 +206,13 @@ public class Engine {
 
 	public GameStateManager getGameStateManager() {
 		return gsm;
+	}
+
+	public int getDebugKey() {
+		return debugKey;
+	}
+
+	public void setDebugKey(int debugKey) {
+		this.debugKey = debugKey;
 	}
 }
