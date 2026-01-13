@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;
 
 import engine.core.Logger;
+import imgui.glfw.ImGuiImplGlfw;
 
 public class Inputs {
 	private long window;
@@ -30,6 +31,8 @@ public class Inputs {
 	private boolean[] prevPadButtons = new boolean[GLFW.GLFW_GAMEPAD_BUTTON_LAST+1];
 
 	private double mouseX, mouseY;
+
+	private ImGuiImplGlfw imgui;
 
 	private static final Map<Integer, String> KEY_NAMES = Map.ofEntries(Map.entry(GLFW_KEY_UP, "UP"),
 			Map.entry(GLFW_KEY_DOWN, "DOWN"), Map.entry(GLFW_KEY_LEFT, "LEFT"), Map.entry(GLFW_KEY_RIGHT, "RIGHT"),
@@ -56,8 +59,9 @@ public class Inputs {
 		    "DPAD_LEFT"  // 14
 		};
 
-	public Inputs(long window) {
+	public Inputs(long window, ImGuiImplGlfw imgui) {
 		this.window = window;
+		this.imgui = imgui;
 
 		setCallbacks();
 	}
@@ -74,6 +78,7 @@ public class Inputs {
 
 		// keyboard
 		GLFW.glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
+			imgui.keyCallback(w, key, scancode, action, mods);
 			if (key != GLFW.GLFW_KEY_UNKNOWN && key >= 0 && key < keys.length) {
 				String keyName = KEY_NAMES.getOrDefault(key, GLFW.glfwGetKeyName(key, scancode));
 				keys[key] = action != GLFW.GLFW_RELEASE;
@@ -87,6 +92,7 @@ public class Inputs {
 		
 		// mouse buttons
 		GLFW.glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
+			imgui.mouseButtonCallback(w, button, action, mods);
 			if (button >= 0 && button < mouseButtons.length) {
 				mouseButtons[button] = action != GLFW.GLFW_RELEASE;
 				if (action == GLFW.GLFW_PRESS) {
@@ -99,6 +105,7 @@ public class Inputs {
 
 		// mouse pos
 		GLFW.glfwSetCursorPosCallback(window, (w, xpos, ypos) -> {
+			imgui.cursorPosCallback(window, xpos, ypos);
 			mouseX = xpos;
 			mouseY = ypos;
 //			Logger.debug("mouseX,mouseY: %f, %f", mouseX, mouseY);
@@ -128,6 +135,7 @@ public class Inputs {
 	}
 
 	public void update() {
+
 		// keys
 	    for (int i = 0; i < keys.length; i++) {
 	        prevKeys[i] = keys[i]; // store state for next frame

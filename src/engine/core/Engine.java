@@ -6,11 +6,14 @@ import org.lwjgl.opengl.GL11;
 import engine.core.Logger.Level;
 import engine.graphics.Renderer;
 import engine.graphics.Window;
+import engine.imgui.ImGuiLayer;
 import engine.inputs.Inputs;
 import engine.loader.Loader;
 import engine.state.GameState;
 import engine.state.GameStateManager;
 import engine.world.Camera;
+import imgui.ImGui;
+import imgui.type.ImBoolean;
 
 public class Engine {
 	private Window window;
@@ -19,77 +22,105 @@ public class Engine {
 	private Renderer renderer;
 	private Camera camera;
 	private GameStateManager gsm;
+	private ImGuiLayer imgui;
+
+	private final float[] parallaxSpeed = new float[] {0.5f};
+	private final ImBoolean showGrid = new ImBoolean(true);
 
 	private Game game;
-	
-    private boolean vsync;
-    private boolean fullscreen;
+
+	private boolean vsync;
+	private boolean fullscreen;
 
 	public Engine(Builder builder) {
 		this.vsync = builder.vsync;
-        this.fullscreen = builder.fullscreen;
-        if (builder.debug) Logger.setLevel(Level.DEBUG);
+		this.fullscreen = builder.fullscreen;
+		if (builder.debug)
+			Logger.setLevel(Level.DEBUG);
 
 		window = new Window(builder.width, builder.height, builder.title, builder.icon);
 		loader = new Loader();
-		camera = new Camera(320, 180); // TODO: make settings variable(16:9) aspect ratio by default leading to black bars
+		camera = new Camera(320, 180); // TODO: make settings variable(16:9) aspect ratio by default leading to black
+										// bars
 		renderer = new Renderer(camera, loader.getTextureLoader());
 		gsm = new GameStateManager();
+		imgui = new ImGuiLayer();
 	}
-	
+
 	public void setGame(Game game) {
 		this.game = game;
 	}
-	
+
 	public void setState(GameState state) {
-	    gsm.set(state, this);
+		gsm.set(state, this);
 	}
-	
+
 	public void run() {
 		window.create(renderer);
 
-		renderer.loadDefaultFont();
-		
-		if (vsync) window.enableVSync();
-		if (fullscreen) window.setFullScreen(true);
+		// ImGui setup debugging purposes first-time using this...
+		imgui.init(window.getId());
 
-		inputs = new Inputs(window.getId());
+		renderer.loadDefaultFont();
+
+		if (vsync)
+			window.enableVSync();
+		if (fullscreen)
+			window.setFullScreen(true);
+
+		inputs = new Inputs(window.getId(), imgui.getImGuiGlfw());
 
 		game.init();
-		
+
 		double lastTime = GLFW.glfwGetTime();
-		
+
 		while (!window.shouldClose()) {
 			double currentTime = GLFW.glfwGetTime();
-		    float dt = (float)(currentTime - lastTime);
-		    lastTime = currentTime;
+			float dt = (float) (currentTime - lastTime);
+			lastTime = currentTime;
 
-		    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-            inputs.update();
-            window.pollEvents();
+			/* ImGui part testing */
+			imgui.begin();
+			inputs.update();
+			window.pollEvents();
 
-            camera.update(dt);
+			camera.update(dt);
 
-            gsm.update(dt);
-            game.update(dt);
+			gsm.update(dt);
+			game.update(dt);
 
-            gsm.render(renderer);
-            window.swapBuffers();
-            
+			gsm.render(renderer);
+
+			drawDebugUI(parallaxSpeed, showGrid);
+			imgui.end();
+
+			window.swapBuffers();
+
 		}
-		
+
 		cleanUp();
 	}
-	
+
+	private void drawDebugUI(float[] parallaxSpeed, ImBoolean showGrid) {
+		ImGui.begin("Debug");
+
+		ImGui.sliderFloat("Parallax speed", parallaxSpeed, 0.0f, 5.0f);
+		ImGui.checkbox("Show grid", showGrid);
+
+		ImGui.end();
+	}
+
 	private void cleanUp() {
+		imgui.dispose();
 		window.destroy();
 		loader.destroy();
 	}
-	
+
 	@SuppressWarnings("unused")
 	public static class Builder {
-		
+
 		// window & rendering settings
 		private int width = 800, height = 600;
 		private String title = "Made with AddCycle's Engine";
@@ -97,21 +128,48 @@ public class Engine {
 		private boolean vsync = false;
 		private boolean fullscreen = false;
 		private boolean debug = false;
-		
+
 		public Builder() {
 		}
-		
-		public Builder width(int w) { this.width = w; return this; }
-        public Builder height(int h) { this.height = h; return this; }
-        public Builder title(String t) { this.title = t; return this; }
-        public Builder icon(String i) { this.icon = i; return this; }
-        public Builder vsync(boolean v) { this.vsync = v; return this; }
-        public Builder fullscreen(boolean f) { this.fullscreen = f; return this; }
-        public Builder debug() { this.debug = true; return this; }
 
-        public Engine build() {
-            return new Engine(this);
-        }
+		public Builder width(int w) {
+			this.width = w;
+			return this;
+		}
+
+		public Builder height(int h) {
+			this.height = h;
+			return this;
+		}
+
+		public Builder title(String t) {
+			this.title = t;
+			return this;
+		}
+
+		public Builder icon(String i) {
+			this.icon = i;
+			return this;
+		}
+
+		public Builder vsync(boolean v) {
+			this.vsync = v;
+			return this;
+		}
+
+		public Builder fullscreen(boolean f) {
+			this.fullscreen = f;
+			return this;
+		}
+
+		public Builder debug() {
+			this.debug = true;
+			return this;
+		}
+
+		public Engine build() {
+			return new Engine(this);
+		}
 	}
 
 	public Inputs getInput() {
@@ -121,7 +179,7 @@ public class Engine {
 	public Loader getLoader() {
 		return loader;
 	}
-	
+
 	public void stop() {
 		window.close();
 	}
@@ -137,7 +195,7 @@ public class Engine {
 	public Camera getCamera() {
 		return camera;
 	}
-	
+
 	public GameStateManager getGameStateManager() {
 		return gsm;
 	}
