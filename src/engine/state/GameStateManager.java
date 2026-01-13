@@ -1,8 +1,10 @@
 package engine.state;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.List;
 
 import engine.core.Engine;
 import engine.graphics.Renderer;
@@ -29,9 +31,6 @@ public class GameStateManager {
 	}
 
 	public void update(float dt) {
-//		if (!states.isEmpty()) {
-//			states.peekFirst().update(dt);
-//		}
 		Iterator<GameState> it = states.iterator(); // top → bottom
 	    while (it.hasNext()) {
 	        GameState state = it.next();
@@ -43,14 +42,21 @@ public class GameStateManager {
 	}
 
 	public void render(Renderer renderer) {
-		Iterator<GameState> it = states.descendingIterator(); // bottom → top
-		while (it.hasNext()) {
-			GameState state = it.next();
-			state.render(renderer);
-			if (state.blocksRenderBelow()) {
-				break;
-			}
-		}
+		List<GameState> toRender = new ArrayList<>();
+
+	    Iterator<GameState> it = states.iterator(); // top → bottom
+	    while (it.hasNext()) {
+	        GameState state = it.next();
+	        toRender.add(state);
+	        if (state.blocksRenderBelow()) {
+	            break;
+	        }
+	    }
+
+	    // Render bottom → top
+	    for (int i = toRender.size() - 1; i >= 0; i--) {
+	        toRender.get(i).render(renderer);
+	    }
 	}
 
 	public GameState peek() {

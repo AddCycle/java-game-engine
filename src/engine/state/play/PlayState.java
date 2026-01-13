@@ -11,11 +11,9 @@ import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.DialogKeybinds;
 import engine.inputs.keybinds.Keybinds;
-import engine.inputs.keybinds.PauseKeybinds;
 import engine.scene.Scene2D;
 import engine.state.GameState;
 import engine.state.dialog.DialogState;
-import engine.state.menu.PauseState;
 
 public class PlayState implements GameState {
 	private Engine engine;
@@ -48,7 +46,8 @@ public class PlayState implements GameState {
 
 		if (keybinds.isJustPressed(input, Action.PAUSE)) {
 			Logger.debug("switched to gamestate pause");
-			engine.getGameStateManager().push(new PauseState(new PauseKeybinds()), engine);
+//			engine.getGameStateManager().push(new engine.state.menu.PauseState(new PauseKeybinds()), engine);
+			engine.getGameStateManager().push(new engine.state.menu.presets.PauseState(this), engine);
 		}
 	}
 

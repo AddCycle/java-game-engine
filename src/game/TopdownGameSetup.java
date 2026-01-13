@@ -7,6 +7,7 @@ import engine.inputs.keybinds.PlayKeybinds;
 import engine.loader.TiledLoader;
 import engine.scene.AnimatedPlayerScene;
 import engine.scene.Scene2D;
+import engine.state.menu.MainMenuState;
 import engine.state.play.PlayState;
 import engine.world.TopdownWorld;
 import engine.world.World2D;
@@ -42,7 +43,8 @@ public class TopdownGameSetup {
 		engine.getCamera().setFollowEntity(player, smoothingFactor);
 
 		Scene2D scene = new AnimatedPlayerScene(world, engine.getCamera(), player, entityManager);
-		engine.setState(new PlayState(scene, new PlayKeybinds()));
+//		engine.setState(new PlayState(scene, new PlayKeybinds()));
+		engine.setState(new MainMenuState(new PlayState(scene, new PlayKeybinds())));
 		
 		return scene;
     }

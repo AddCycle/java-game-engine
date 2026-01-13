@@ -157,6 +157,23 @@ public class Renderer {
 
 		drawText(text, x, y, charW, charH);
 	}
+
+	public void drawText(String text, float x, float y) {
+	    float startX = x;
+	    int charW = 8;
+	    int charH = 8;
+
+	    for (char c : text.toCharArray()) {
+	        if (c == '\n') {
+	            y += charH;
+	            x = startX;
+	            continue;
+	        }
+
+	        drawChar(c, x, y, charW, charH);
+	        x += charW;
+	    }
+	}
 	
 	public void drawText(String text, float x, float y, int charW, int charH) {
 	    float startX = x;
