@@ -39,7 +39,6 @@ public class Engine {
 		this.fullscreen = builder.fullscreen;
 		if (builder.debug) {
 			Logger.setLevel(Level.DEBUG);
-			debug = builder.debug;
 		}
 
 		window = new Window(builder.width, builder.height, builder.title, builder.icon);

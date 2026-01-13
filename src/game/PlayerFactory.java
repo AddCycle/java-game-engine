@@ -23,11 +23,9 @@ public class PlayerFactory {
         AnimatedPlayer2D player = new AnimatedPlayer2D(controller, 16, 16, 16, 16);
         player.tileX = (int) Math.floor(player.x / tilemap.getTileSize());
         player.tileY = (int) Math.floor(player.y / tilemap.getTileSize());
-        player.targetTileX = (int) Math.floor(player.x / tilemap.getTileSize());
-        player.targetTileY = (int) Math.floor(player.y / tilemap.getTileSize());
+        player.targetTileX = player.tileX;
+        player.targetTileY = player.tileY;
         Logger.info("Player created at tileX, tileY: %d, %d", player.tileX, player.tileY);
-//        player.x = player.tileX * tilemap.getTileSize();
-//        player.y = player.tileY * tilemap.getTileSize();
 
         AnimationsPresets.topdown(player, engine.getRenderer());
         

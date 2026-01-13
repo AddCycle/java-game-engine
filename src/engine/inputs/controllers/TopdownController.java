@@ -99,8 +99,9 @@ public class TopdownController implements PlayerController2D {
 		p.targetTileX = tx;
 		p.targetTileY = ty;
 
-		if (map.isSolid(p.targetTileX, p.targetTileY))
+		if (map.isSolid(p.targetTileX, p.targetTileY)) {
 			return;
+		}
 		
 		if (entityManager.isEntityBlockingTile(tx, ty, p, map)) return;
 

@@ -6,8 +6,6 @@ import engine.world.Camera;
 
 public class AnimatedPlayer2D extends AnimatedEntity {
 	private PlayerController2D controller;
-	public int tileX, tileY;
-	public int targetTileX, targetTileY;
 
 	public AnimatedPlayer2D(PlayerController2D controller) {
 		this(controller, 0, 0, 16, 16);
