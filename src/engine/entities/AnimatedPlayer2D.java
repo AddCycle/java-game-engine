@@ -35,6 +35,10 @@ public class AnimatedPlayer2D extends AnimatedEntity {
 		controller = newController;
 	}
 
+	public PlayerController2D getController() {
+		return controller;
+	}
+
 	public void reset() {
 		x = 0;
 		y = 0;

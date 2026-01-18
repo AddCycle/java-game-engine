@@ -16,7 +16,7 @@ public class PauseState extends MenuState {
 
 	@Override
 	protected Menu createMenu() {
-		return new VerticalMenu(engine.getInput(),
+		return new VerticalMenu(engine,
 	            new MenuItem("Resume", () ->
 	                engine.getGameStateManager().pop()),
 	            new MenuItem("Quit to Title", () ->

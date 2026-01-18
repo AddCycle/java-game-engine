@@ -30,6 +30,10 @@ public class Player2D extends Entity {
 		renderer.drawTexturedRect(texture, x - camX, y - camY, width, height);
 	}
 
+	public void getController(PlayerController2D newController) {
+		controller = newController;
+	}
+
 	public void setController(PlayerController2D newController) {
 		controller = newController;
 	}

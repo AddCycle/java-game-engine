@@ -14,7 +14,7 @@ import org.lwjgl.system.MemoryStack;
 import engine.core.Logger;
 
 public class Window {
-	private long window;
+	private long windowId;
 	public int width;
 	public int height;
 	private String title;
@@ -36,20 +36,18 @@ public class Window {
 		}
 
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-		window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
+		windowId = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 		this.renderer = renderer;
 		centerWindow();
-		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwMakeContextCurrent(windowId);
 		GL.createCapabilities();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		renderer.updateViewport(width, height);
-		GLFW.glfwShowWindow(window);
+		GLFW.glfwShowWindow(windowId);
 
 		// resize callback
-		GLFW.glfwSetFramebufferSizeCallback(window, (_, width, height) -> {
-//			this.width = width;
-//		    this.height = height;
+		GLFW.glfwSetFramebufferSizeCallback(windowId, (_, width, height) -> {
 		    renderer.updateViewport(width, height);
 		});
 
@@ -76,14 +74,14 @@ public class Window {
 		        icon.width(w.get(0));
 		        icon.height(h.get(0));
 		        icon.pixels(pixels);
-		        GLFW.glfwSetWindowIcon(window, icon);
+		        GLFW.glfwSetWindowIcon(windowId, icon);
 		        STBImage.stbi_image_free(pixels);
 		    }
 		}
 	}
 	
 	public boolean shouldClose() {
-		return GLFW.glfwWindowShouldClose(window);
+		return GLFW.glfwWindowShouldClose(windowId);
 	}
 
 	public void enableVSync() {
@@ -91,7 +89,7 @@ public class Window {
 	}
 
 	public void swapBuffers() {
-		GLFW.glfwSwapBuffers(window);
+		GLFW.glfwSwapBuffers(windowId);
 	}
 
 	public void pollEvents() {
@@ -109,7 +107,7 @@ public class Window {
 	        int x = (vidMode.width() - windowWidth) / 2;
 	        int y = (vidMode.height() - windowHeight) / 2;
 
-	        GLFW.glfwSetWindowPos(window, x, y);
+	        GLFW.glfwSetWindowPos(windowId, x, y);
 	    }
 	}
 
@@ -117,11 +115,11 @@ public class Window {
 		long monitor = GLFW.glfwGetPrimaryMonitor();
 		GLFWVidMode mode = GLFW.glfwGetVideoMode(monitor);
 		if (b) {
-			GLFW.glfwSetWindowMonitor(window, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+			GLFW.glfwSetWindowMonitor(windowId, monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
 			renderer.updateViewport(mode.width(), mode.height());
 			fullscreen = true;
 		} else {
-			GLFW.glfwSetWindowMonitor(window, 0, 0, 0, width, height, mode.refreshRate());
+			GLFW.glfwSetWindowMonitor(windowId, 0, 0, 0, width, height, mode.refreshRate());
 			renderer.updateViewport(width, height);
 			centerWindow();
 			fullscreen = false;
@@ -129,15 +127,15 @@ public class Window {
 	}
 	
 	public void destroy() {
-		GLFW.glfwDestroyWindow(window);
+		GLFW.glfwDestroyWindow(windowId);
 	}
 
 	public long getId() {
-		return window;
+		return windowId;
 	}
 	
 	public void close() {
-		GLFW.glfwSetWindowShouldClose(window, true);
+		GLFW.glfwSetWindowShouldClose(windowId, true);
 	}
 
 	public boolean isFullscreen() {

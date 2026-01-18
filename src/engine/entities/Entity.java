@@ -23,6 +23,12 @@ public abstract class Entity {
 	public boolean solid = false;
 	public BodyType bodyType = BodyType.DYNAMIC;
 	
+	// for topdown movement
+	public int intentDX = 0;
+	public int intentDY = 0;
+	private MovementMode movementMode = MovementMode.TILE;
+    private float speed = 30f;
+	
 	private final List<Consumer<Entity>> collisionListeners = new ArrayList<>();
 	public boolean markedForRemoval;
 
@@ -79,5 +85,13 @@ public abstract class Entity {
 
 	public boolean wantsToInteract() {
 		return wantsToInteract;
+	}
+
+    public MovementMode getMovementMode() { return movementMode; }
+    public void setMovementMode(MovementMode m) { movementMode = m; }
+
+    public void setSpeed(float s) { speed = s; }
+	public float getSpeed() {
+		return speed;
 	}
 }

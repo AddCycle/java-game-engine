@@ -4,6 +4,7 @@ import engine.entities.Entity;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;
+import engine.world.map.TileMap;
 
 public class PlatformerController implements PlayerController2D {
 	private Inputs input;
@@ -27,4 +28,11 @@ public class PlatformerController implements PlayerController2D {
             player.onGround = false;
         }
     }
+
+	/**
+	 * Doesn't have tilemap yet
+	 */
+	public void setTileMap(TileMap tilemap) {
+		// doesn't have access to the tilemap
+	}
 }

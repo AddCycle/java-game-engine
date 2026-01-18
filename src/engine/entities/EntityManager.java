@@ -18,6 +18,7 @@ import engine.world.physics.Physics2D;
  */
 public class EntityManager {
 	private List<Entity> entities = new ArrayList<>();
+	private List<Entity> toAddEntities = new ArrayList<>();
 	private Camera camera;
 	private Physics2D physics;
 	
@@ -30,8 +31,16 @@ public class EntityManager {
 		this.physics = physics;
 	}
 
+	public Physics2D getPhysics() {
+		return physics;
+	}
+
     public void add(Entity e) {
         entities.add(e);
+    }
+
+    public void addSafely(Entity e) {
+        toAddEntities.add(e);
     }
 
 	public void remove(Entity e) {
@@ -47,6 +56,10 @@ public class EntityManager {
         checkCollisions();
         
         entities.removeIf(e -> e.markedForRemoval);
+
+        entities.addAll(toAddEntities);
+        
+        toAddEntities.clear();
     }
 
     private void checkCollisions() {
@@ -130,6 +143,7 @@ public class EntityManager {
 	    return false;
 	}
 	
+	// TODO : find use otherwise remove
 	private void resolveSolidCollision(Entity a, Entity b) {
 	    Rectangle.Float ra = a.getHitbox();
 	    Rectangle.Float rb = b.getHitbox();

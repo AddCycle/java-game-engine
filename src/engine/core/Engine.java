@@ -24,9 +24,6 @@ public class Engine {
 	private GameStateManager gsm;
 	private ImGuiLayer imgui;
 
-	private final float[] parallaxSpeed = new float[] {0.5f};
-	private final ImBoolean showGrid = new ImBoolean(true);
-
 	private Game game;
 
 	private boolean vsync;
@@ -57,8 +54,8 @@ public class Engine {
 	public void setState(GameState state) {
 		gsm.set(state, this);
 	}
-
-	public void run() {
+	
+	private void init() {
 		window.create(renderer);
 
 		// ImGui setup debugging purposes first-time using this...
@@ -74,6 +71,10 @@ public class Engine {
 		inputs = new Inputs(window.getId(), imgui.getImGuiGlfw());
 
 		game.init();
+	}
+
+	public void run() {
+		init();
 
 		double lastTime = GLFW.glfwGetTime();
 
@@ -100,23 +101,13 @@ public class Engine {
 
 			gsm.render(renderer);
 
-			if (debug) drawDebugUI(parallaxSpeed, showGrid);
+			if (debug) game.debug();
 			imgui.end();
 
 			window.swapBuffers();
-
 		}
 
 		cleanUp();
-	}
-
-	private void drawDebugUI(float[] parallaxSpeed, ImBoolean showGrid) {
-		ImGui.begin("Debug");
-
-		ImGui.sliderFloat("Parallax speed", parallaxSpeed, 0.0f, 5.0f);
-		ImGui.checkbox("Show grid", showGrid);
-
-		ImGui.end();
 	}
 
 	private void cleanUp() {
@@ -205,6 +196,10 @@ public class Engine {
 
 	public GameStateManager getGameStateManager() {
 		return gsm;
+	}
+
+	public ImGuiLayer getImGui() {
+		return imgui;
 	}
 
 	public int getDebugKey() {

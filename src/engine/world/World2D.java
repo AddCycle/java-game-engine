@@ -1,8 +1,10 @@
 package engine.world;
 
 import engine.graphics.Renderer;
+import engine.world.map.TileMap;
 
 public interface World2D {
+	public TileMap getTileMap();
 	float getWidth();
 	float getHeight();
 	void update(float dt);

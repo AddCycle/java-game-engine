@@ -6,7 +6,6 @@ import engine.entities.AnimatedPlayer2D;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.graphics.Renderer;
-import engine.inputs.controllers.PlayerController2D;
 import engine.world.Camera;
 import engine.world.World2D;
 
@@ -38,9 +37,8 @@ public class AnimatedPlayerScene implements Scene2D {
 	}
 
 	@Override
-	public void setWorld(World2D newWorld, PlayerController2D newController) {
+	public void setWorld(World2D newWorld) {
 		this.world = newWorld;
-		player.setController(newController);
 		camera.setWorld(newWorld);
 
 		player.reset();
@@ -54,6 +52,10 @@ public class AnimatedPlayerScene implements Scene2D {
 	@Override
 	public List<Entity> getEntities() {
 		return entities.getEntities();
+	}
+
+	public EntityManager getEntityManager() {
+		return entities;
 	}
 
 	@Override

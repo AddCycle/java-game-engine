@@ -15,11 +15,11 @@ public class MainMenuState extends MenuState {
 
 	@Override
 	protected Menu createMenu() {
-		return new VerticalMenu(engine.getInput(),
+		return new VerticalMenu(engine,
 	            new MenuItem("Start", () -> engine.setState(playState)),
 //	            new MenuItem("Options", () -> engine.getGameStateManager()
 //	                                                .push(new OptionsState(), engine)),
-	            new MenuItem("Quit", () -> System.exit(0))
+	            new MenuItem("Quit", () -> engine.stop())
 	        );
 	}
 

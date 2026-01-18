@@ -6,10 +6,10 @@ import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.entities.Player2D;
 import engine.graphics.Renderer;
-import engine.inputs.controllers.PlayerController2D;
 import engine.world.Camera;
 import engine.world.World2D;
 
+// TODO(refactor): make a scene superclass that gets all the basics things to avoid re-writing things
 public class Scene implements Scene2D {
 	private World2D world;
 	private Camera camera;
@@ -38,9 +38,9 @@ public class Scene implements Scene2D {
 	}
 
 	@Override
-	public void setWorld(World2D newWorld, PlayerController2D newController) {
+	public void setWorld(World2D newWorld) {
 		this.world = newWorld;
-		player.setController(newController);
+
 		camera.setWorld(newWorld);
 		
 		player.reset();
@@ -59,5 +59,10 @@ public class Scene implements Scene2D {
 	@Override
 	public Player2D getPlayer() {
 		return player;
+	}
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entities;
 	}
 }

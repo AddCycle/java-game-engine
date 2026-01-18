@@ -1,5 +1,6 @@
 package engine.ui.menu;
 
+import engine.core.Engine;
 import engine.graphics.Renderer;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
@@ -11,12 +12,14 @@ public class VerticalMenu implements Menu {
 	private MenuItem[] items;
 	private int selected = 0;
 	private Keybinds keybinds;
+	private Engine engine;
 	private Inputs inputs;
 
-	public VerticalMenu(Inputs inputs, MenuItem... items) {
+	public VerticalMenu(Engine engine, MenuItem... items) {
+		this.engine = engine;
 		this.items = items;
 		this.keybinds = new MenuKeybinds();
-		this.inputs = inputs;
+		this.inputs = engine.getInput();
 	}
 
 	@Override
@@ -33,6 +36,8 @@ public class VerticalMenu implements Menu {
 
 	@Override
 	public void render(Renderer renderer) {
+		float w = engine.getCamera().width;
+		float h = engine.getCamera().height;
 		for (int i = 0; i < items.length; i++) {
 			String prefix = (i == selected) ? "> " : "  ";
 			renderer.drawText(prefix + items[i].label, 40, 40 + i * 16);

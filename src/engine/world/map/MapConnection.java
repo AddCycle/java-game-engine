@@ -1,9 +1,12 @@
 package engine.world.map;
 
-import engine.entities.Direction;
-
 public class MapConnection {
-	public Direction dir;
+	
+	public MapConnection() {
+		
+	}
+
+	public Integer fromX, fromY;
     public String targetMap;
     public int entryX, entryY;
 }

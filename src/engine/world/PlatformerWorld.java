@@ -40,4 +40,9 @@ public class PlatformerWorld implements World2D {
         }
         return false;
 	}
+
+	@Override
+	public TileMap getTileMap() {
+		return map;
+	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="left-up" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="left-up" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="7">
  <editorsettings>
   <export target="sample1.json" format="json"/>
  </editorsettings>
@@ -37,7 +37,7 @@
 0,0,0,0,0,0,2,2,0,2,
 2,0,0,0,0,0,0,0,0,2,
 2,0,0,0,0,0,0,2,0,2,
-2,0,0,0,0,0,0,0,0,2,
+2,0,0,0,0,0,0,0,0,0,
 2,0,0,0,0,0,0,0,0,2,
 2,0,0,0,0,0,0,0,0,2,
 2,2,2,2,2,2,2,2,2,2
@@ -51,10 +51,26 @@
 0,0,0,0,0,0,3,3,0,3,
 3,0,0,0,0,0,0,0,0,3,
 3,0,0,0,0,0,0,3,0,3,
-3,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,
 3,0,0,0,0,0,0,0,0,3,
 3,0,0,0,0,0,0,0,0,3,
 3,3,3,3,3,3,3,3,3,3
 </data>
  </layer>
+ <objectgroup id="5" name="connections">
+  <object id="2" x="146.5" y="97.75" width="11" height="12.5">
+   <properties>
+    <property name="entryX" type="int" value="0"/>
+    <property name="entryY" type="int" value="0"/>
+    <property name="targetMap" value="sample2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="npcs">
+  <object id="6" x="34.8125" y="20.0625" width="8.8125" height="9.1875">
+   <properties>
+    <property name="dialog" value="Hello traveler"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

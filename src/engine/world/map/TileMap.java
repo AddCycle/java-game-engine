@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import engine.core.Logger;
+import entities.interaction.InteractibleNPC;
 
 public class TileMap {
 	private int width, height, tileSize;
 	private Tile[] tiles;
 	
 	private List<TileLayer> layers = new ArrayList<>();
-	private Tileset tileset;
 	private Map<String, Object> properties; // map-level data
-	private List<MapConnection> connections;
+	private List<MapConnection> connections = new ArrayList<>();
 
 	/**
 	 * Creates a tilemap object which contains the 2d map infos
@@ -36,6 +36,18 @@ public class TileMap {
 	    }
 	    layers.add(layer);
 	}
+	
+	public void addConnection(MapConnection c) {
+        connections.add(c);
+    }
+
+    public MapConnection getConnectionAt(int tx, int ty) {
+        for (MapConnection c : connections) {
+            if (c.fromX == tx && c.fromY == ty)
+                return c;
+        }
+        return null;
+    }
 	
 	public void update(float dt) {
 		
@@ -70,6 +82,10 @@ public class TileMap {
 
 	public List<TileLayer> getLayers() {
 		return layers;
+	}
+
+	public List<MapConnection> getConnections() {
+		return connections;
 	}
 
 	public Tile getTile(int id) {

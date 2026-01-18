@@ -31,8 +31,13 @@ public class Renderer {
 		this.textureLoader = texLoader;
 	}
 
+	// TODO: move to a font loader later
+	public void loadFont(String path) {
+	    fontTexture = loadTexture(path);
+	}
+	
 	public void loadDefaultFont() {
-	    fontTexture = loadTexture("resources/assets/font.png");
+	    loadFont("resources/assets/font.png");
 	}
 	
 	public int loadTexture(String texPath) {

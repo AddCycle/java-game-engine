@@ -41,7 +41,7 @@ public class TextureLoader {
 	        IntBuffer channels = stack.mallocInt(1);
 
 	        ByteBuffer image = STBImage.stbi_load(path, w, h, channels, 4);
-	        if (image == null) throw new RuntimeException("Failed to load image");
+	        if (image == null) throw new RuntimeException(String.format("[ENGINE/LOADER] Failed to load texture : %s", path));
 
 	        glTexImage2D(
 	            GL_TEXTURE_2D,

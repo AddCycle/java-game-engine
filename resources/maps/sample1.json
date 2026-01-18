@@ -30,7 +30,7 @@
             0, 0, 0, 0, 0, 0, 2, 2, 0, 2,
             2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
             2, 0, 0, 0, 0, 0, 0, 2, 0, 2,
-            2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+            2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
             2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -51,7 +51,7 @@
             0, 0, 0, 0, 0, 0, 3, 3, 0, 3,
             3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
             3, 0, 0, 0, 0, 0, 0, 3, 0, 3,
-            3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
+            3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
             3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
             3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
@@ -64,9 +64,75 @@
          "width":10,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"connections",
+         "objects":[
+                {
+                 "height":12.5,
+                 "id":2,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"entryX",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"entryY",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"targetMap",
+                         "type":"string",
+                         "value":"sample2"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":11,
+                 "x":146.5,
+                 "y":97.75
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"npcs",
+         "objects":[
+                {
+                 "height":9.1875,
+                 "id":6,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Hello traveler"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8.8125,
+                 "x":34.8125,
+                 "y":20.0625
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":1,
+ "nextlayerid":7,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.11.2",
