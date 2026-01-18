@@ -63,4 +63,9 @@ public class PlatformerWorld implements World2D {
 	public TileMap getTileMap() {
 		return map;
 	}
+
+	@Override
+	public void setTileMap(TileMap map) {
+		this.map = map;
+	}
 }

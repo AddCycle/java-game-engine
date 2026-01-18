@@ -138,7 +138,13 @@ public class TopdownWorld implements World2D {
 		if (c == null)
 			return;
 
-		tilemapMgr.loadMap("resources/maps/" + c.targetMap + ".json", tilemapMgr.getTiles(), p, c.entryX, c.entryY);
+		tilemapMgr.setCurrentMap(c.targetMap, p);
+		int spawnX = c.entryX;
+		int spawnY = c.entryY;
+		p.tileX = spawnX;
+		p.tileY = spawnY;
+		p.x = spawnX * tilemapMgr.getCurrentMap().getTileSize();
+		p.y = spawnY * tilemapMgr.getCurrentMap().getTileSize();
 	}
 
 	private float approach(float current, float target, float maxDelta) {
@@ -150,5 +156,10 @@ public class TopdownWorld implements World2D {
 	@Override
 	public TileMap getTileMap() {
 		return map;
+	}
+
+	@Override
+	public void setTileMap(TileMap map) {
+		this.map = map;
 	}
 }

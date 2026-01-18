@@ -5,6 +5,7 @@ import engine.world.map.TileMap;
 
 public interface World2D {
 	public TileMap getTileMap();
+	public void setTileMap(TileMap map);
 	float getWidth();
 	float getHeight();
 	void update(float dt);

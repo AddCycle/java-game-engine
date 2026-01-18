@@ -60,9 +60,13 @@ public class NamelessAdventure implements Game {
 
 		tilemapMgr.setScene(scene);
 
-		tilemapMgr.loadMap("resources/maps/sample1.json", tuiles, scene.getPlayer(), 0, 0);
+		// map init
+		tilemapMgr.addMap("sample1", "resources/maps/sample1.json");
+		tilemapMgr.addMap("sample2", "resources/maps/sample2.json");
 
 		scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
+
+		tilemapMgr.setCurrentMap("sample1", scene.getPlayer());
 
 		playState = new PlayState(scene, new PlayKeybinds());
 		engine.setState(new MainMenuState(playState));
@@ -78,18 +82,13 @@ public class NamelessAdventure implements Game {
 		}
 
 		if (generalKeys.isJustPressed(input, Action.TAB)) {
-			tilemapMgr.loadMap("resources/maps/sample2.json", tuiles, scene.getPlayer(), 0, 0);
+			tilemapMgr.setCurrentMap("sample2", scene.getPlayer());
 			if (entityManager.getPhysics() instanceof TopdownPhysics) {
 				scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
 			} else if (entityManager.getPhysics() instanceof PlatformerPhysics) {
 				scene.setWorld(new PlatformerWorld(tilemapMgr, entityManager));
 			}
 		}
-
-//		if (generalKeys.isJustPressed(input, Action.TAB)) {
-//			tilemapMgr.loadMap("resources/maps/sample2.json", tuiles, scene.getPlayer(), 0, 0);
-//			scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
-//		}
 	}
 
 	@Override

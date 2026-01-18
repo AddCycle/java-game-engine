@@ -1,6 +1,10 @@
 package engine.world.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import engine.core.Engine;
+import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.loader.TiledLoader;
@@ -10,42 +14,66 @@ import engine.world.World2D;
 
 public class TileMapManager {
 	private Engine engine;
-    private EntityManager entityManager;
-    private TileMap currentMap;
+	private EntityManager entityManager;
+	private TileMap currentMap;
 	private Scene2D scene;
 	private Tile[] tiles;
+	private Map<String, TileMap> maps = new HashMap<>();
 
-    public TileMapManager(Engine engine,
-                      EntityManager em,
-                      Tile[] tiles) {
-        this.engine = engine;
-        this.entityManager = em;
-        this.tiles = tiles;
-    }
-    
-    public void setScene(Scene2D scene) {
-    		this.scene = scene;
-    }
+	public TileMapManager(Engine engine, EntityManager em, Tile[] tiles) {
+		this.engine = engine;
+		this.entityManager = em;
+		this.tiles = tiles;
+	}
 
-    public void loadMap(String mapPath, Tile[] tiles, Entity player, int spawnX, int spawnY) {
+	public void setScene(Scene2D scene) {
+		this.scene = scene;
+	}
 
-        currentMap = TiledLoader.loadFromJSON(mapPath, tiles, entityManager);
-        World2D newWorld = new TopdownWorld(this, entityManager);
+	/**
+	 * Preloads the map but doesn't set it to the current map
+	 * 
+	 * @param mapName
+	 * @param mapPath
+	 */
+	public void addMap(String mapName, String mapPath) {
+		TileMap map = TiledLoader.loadFromJSON(mapPath, tiles, entityManager);
+		if (map == null) {
+			Logger.error("TileMapManager tried to load unexistent map : %s", mapName);
+			return;
+		}
+		maps.put(mapName, map);
+	}
 
-        scene.setWorld(newWorld);
+	// TODO : simplify this method, load the spawnX/Y inside the map properties to
+	// reset player spawn
+	public void setCurrentMap(String mapName, Entity player) {
+		if (!maps.containsKey(mapName)) {
+			Logger.error("TileMapManager tried to set unloaded map : %s", mapName);
+			return;
+		}
 
-        player.tileX = spawnX;
-        player.tileY = spawnY;
-        player.x = spawnX * currentMap.getTileSize();
-        player.y = spawnY * currentMap.getTileSize();
-    }
-    
-    public TileMap getCurrentMap() {
-        return currentMap;
-    }
+		currentMap = maps.get(mapName);
+
+		scene.getWorld().setTileMap(currentMap);
+
+//        player.tileX = spawnX;
+//        player.tileY = spawnY;
+//        player.x = spawnX * currentMap.getTileSize();
+//        player.y = spawnY * currentMap.getTileSize();
+		player.tileX = 0;
+		player.tileY = 0;
+		player.x = 0 * currentMap.getTileSize();
+		player.y = 0 * currentMap.getTileSize();
+
+		Logger.debug("TileMapManager successfully set map : %s to current", mapName);
+	}
+
+	public TileMap getCurrentMap() {
+		return currentMap;
+	}
 
 	public Tile[] getTiles() {
 		return tiles;
 	}
-
 }
