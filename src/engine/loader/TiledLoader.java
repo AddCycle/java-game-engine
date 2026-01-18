@@ -108,7 +108,7 @@ public class TiledLoader {
 
 			        npc.dialog = getProperty(props, "dialog").getAsString();
 
-			        entityManager.addSafely(npc);
+			        map.addEntity(npc);
 			    }
 
 			}

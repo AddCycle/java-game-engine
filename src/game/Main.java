@@ -10,7 +10,7 @@ public class Main {
 				.width(1280)
 				.height(720)
 				.title("Nameless Adventure")
-				.vsync(false)
+				.vsync(true) // FIXME : see if it is really that performance saving
 				.fullscreen(false)
 				.debug()
 				.icon("resources/icon.png")

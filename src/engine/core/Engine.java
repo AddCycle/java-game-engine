@@ -12,8 +12,6 @@ import engine.loader.Loader;
 import engine.state.GameState;
 import engine.state.GameStateManager;
 import engine.world.Camera;
-import imgui.ImGui;
-import imgui.type.ImBoolean;
 
 public class Engine {
 	private Window window;
@@ -83,6 +81,8 @@ public class Engine {
 			float dt = (float) (currentTime - lastTime);
 			lastTime = currentTime;
 
+			int fps = (int)(1.0f / dt);
+
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 			/* ImGui part testing */
@@ -101,7 +101,7 @@ public class Engine {
 
 			gsm.render(renderer);
 
-			if (debug) game.debug();
+			if (debug) game.debug(fps);
 			imgui.end();
 
 			window.swapBuffers();

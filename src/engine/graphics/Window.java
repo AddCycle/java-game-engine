@@ -85,7 +85,7 @@ public class Window {
 	}
 
 	public void enableVSync() {
-		GLFW.glfwWindowHint(GLFW.GLFW_DOUBLEBUFFER, GLFW.GLFW_FALSE);
+		GLFW.glfwSwapInterval(1);
 	}
 
 	public void swapBuffers() {

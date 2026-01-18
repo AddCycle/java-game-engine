@@ -92,17 +92,18 @@ public class NamelessAdventure implements Game {
 	}
 
 	@Override
-	public void debug() {
-		drawDebugUI();
+	public void debug(int fps) {
+		drawDebugUI(fps);
 
 		// TODO : complete so the player can indeed change controller and other things
 		// relative to a platformer world
 		handleWorldSwitchDebug();
 	}
 
-	private void drawDebugUI() {
+	private void drawDebugUI(int fps) {
 		ImGui.begin("Debug");
 
+		ImGui.text("FPS" + fps);
 		ImGui.sliderFloat("Parallax speed", parallaxSpeed, 0.0f, 5.0f);
 		ImGui.checkbox("Show grid", showGrid);
 		ImGui.checkbox("Using ? topdown physics (true) : platformers one (false)", usingTopdownPhysics);

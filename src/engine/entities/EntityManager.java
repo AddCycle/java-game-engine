@@ -5,8 +5,11 @@ import static engine.entities.body.BodyType.STATIC;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
+import engine.core.Logger;
 import engine.graphics.Renderer;
 import engine.world.Camera;
 import engine.world.World2D;
@@ -17,14 +20,21 @@ import engine.world.physics.Physics2D;
  * For now only for World2D TODO expand later on
  */
 public class EntityManager {
-	private List<Entity> entities = new ArrayList<>();
-	private List<Entity> toAddEntities = new ArrayList<>();
+	private final List<Entity> renderList = new ArrayList<>();
+	private final List<Entity> entities = new ArrayList<>();
+	private final List<Entity> toAddEntities = new ArrayList<>();
 	private Camera camera;
 	private Physics2D physics;
+	private Entity player;
 	
 	public EntityManager(Camera cam, Physics2D physics) {
 		camera = cam;
 		this.physics = physics;
+	}
+	
+	public void setPlayer(Entity player) {
+		this.player = player;
+		add(player);
 	}
 	
 	public void setPhysics(Physics2D physics) {
@@ -55,8 +65,6 @@ public class EntityManager {
         
         checkCollisions();
         
-        entities.removeIf(e -> e.markedForRemoval);
-
         entities.addAll(toAddEntities);
         
         toAddEntities.clear();
@@ -81,12 +89,22 @@ public class EntityManager {
     }
 
 	public void render(Renderer renderer) {
-        for (Entity e : entities)
-            e.render(renderer, camera);
+		renderList.clear();
+	    renderList.addAll(entities);
+
+		renderList.sort(Comparator.comparingDouble(e -> e.y + e.height));
+
+		for (Entity e : renderList) {
+		    e.render(renderer, camera);
+		}
     }
 
-	public void clear() {
+	public void clearEntities() {
 		entities.clear();
+	}
+
+	public void clearEntitiesSafely() {
+        entities.removeIf(e -> e != player);
 	}
 
 	public List<Entity> getEntities() {
@@ -101,7 +119,7 @@ public class EntityManager {
 	    } else if (a.bodyType == STATIC && b.bodyType == DYNAMIC) {
 	        pushOut(b, a);
 	    } else {
-	        // both dynamic → optional split
+	        // both dynamic : optional split
 	        pushOut(a, b);
 	    }
 	}
@@ -142,24 +160,12 @@ public class EntityManager {
 	    }
 	    return false;
 	}
-	
-	// TODO : find use otherwise remove
-	private void resolveSolidCollision(Entity a, Entity b) {
-	    Rectangle.Float ra = a.getHitbox();
-	    Rectangle.Float rb = b.getHitbox();
 
-	    float dx = (ra.x + ra.width / 2) - (rb.x + rb.width / 2);
-	    float dy = (ra.y + ra.height / 2) - (rb.y + rb.height / 2);
+	public void addAll(Collection<Entity> entities) {
+		this.entities.addAll(entities);
+	}
 
-	    float overlapX = (ra.width + rb.width) / 2 - Math.abs(dx);
-	    float overlapY = (ra.height + rb.height) / 2 - Math.abs(dy);
-
-	    if (overlapX < overlapY) {
-	        a.x += dx > 0 ? overlapX : -overlapX;
-	        a.vx = 0;
-	    } else {
-	        a.y += dy > 0 ? overlapY : -overlapY;
-	        a.vy = 0;
-	    }
+	public void addAllSafely(Collection<Entity> entities) {
+		toAddEntities.addAll(entities);
 	}
 }

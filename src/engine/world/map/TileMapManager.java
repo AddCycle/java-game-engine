@@ -54,6 +54,10 @@ public class TileMapManager {
 		currentMap = maps.get(mapName);
 
 		scene.getWorld().setTileMap(currentMap);
+		
+		// entities setup
+		entityManager.clearEntitiesSafely();
+		entityManager.addAllSafely(currentMap.getEntities());
 
 //        player.tileX = spawnX;
 //        player.tileY = spawnY;

@@ -1,15 +1,16 @@
 package engine.world.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import engine.core.Logger;
-import entities.interaction.InteractibleNPC;
+import engine.entities.Entity;
 
 public class TileMap {
 	private int width, height, tileSize;
 	private Tile[] tiles;
+	private List<Entity> entities = new ArrayList<>();
 	
 	private List<TileLayer> layers = new ArrayList<>();
 	private Map<String, Object> properties; // map-level data
@@ -74,10 +75,18 @@ public class TileMap {
 	        int tileId = layer.get(x, y);
 	        if (tileId == 0) continue; 
 	        boolean solid = tiles[tileId - 1].solid;
-	        Logger.debug("Checking tile " + tileId + " at ("+x+","+y+"): solid=" + solid);
+//	        Logger.debug("Checking tile " + tileId + " at ("+x+","+y+"): solid=" + solid);
 	        if (solid) return true;
 	    }
 	    return false;
+	}
+
+	public void addEntity(Entity e) {
+		entities.add(e);
+	}
+
+	public void addEntities(Collection<? extends Entity> e) {
+		entities.addAll(e);
 	}
 
 	public List<TileLayer> getLayers() {
@@ -90,5 +99,9 @@ public class TileMap {
 
 	public Tile getTile(int id) {
 		return tiles[id];
+	}
+
+	public List<Entity> getEntities() {
+		return entities;
 	}
 }
