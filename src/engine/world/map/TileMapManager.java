@@ -9,8 +9,6 @@ import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.loader.TiledLoader;
 import engine.scene.Scene2D;
-import engine.world.TopdownWorld;
-import engine.world.World2D;
 
 public class TileMapManager {
 	private Engine engine;

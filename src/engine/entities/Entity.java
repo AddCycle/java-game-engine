@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import engine.entities.body.BodyType;
+import engine.entities.movement.Direction;
+import engine.entities.movement.MovementMode;
 import engine.graphics.Renderer;
 import engine.world.Camera;
 

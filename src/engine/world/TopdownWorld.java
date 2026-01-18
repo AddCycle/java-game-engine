@@ -2,7 +2,7 @@ package engine.world;
 
 import engine.entities.Entity;
 import engine.entities.EntityManager;
-import engine.entities.MovementMode;
+import engine.entities.movement.MovementMode;
 import engine.graphics.Renderer;
 import engine.world.map.MapConnection;
 import engine.world.map.TileMap;
@@ -69,9 +69,8 @@ public class TopdownWorld implements World2D {
 	    p.tileY = (int)(p.y / map.getTileSize());
 
 	    if (p.tileX != oldTileX || p.tileY != oldTileY) {
-	        checkConnection(p);
+			MapConnection.checkConnection(p, tilemapMgr);
 	    }
-
 	}
 
 	@Override
@@ -129,22 +128,8 @@ public class TopdownWorld implements World2D {
 			p.tileY = p.targetTileY;
 			p.moving = false;
 
-			checkConnection(p);
+			MapConnection.checkConnection(p, tilemapMgr);
 		}
-	}
-
-	private void checkConnection(Entity p) {
-		MapConnection c = map.getConnectionAt(p.tileX, p.tileY);
-		if (c == null)
-			return;
-
-		tilemapMgr.setCurrentMap(c.targetMap, p);
-		int spawnX = c.entryX;
-		int spawnY = c.entryY;
-		p.tileX = spawnX;
-		p.tileY = spawnY;
-		p.x = spawnX * tilemapMgr.getCurrentMap().getTileSize();
-		p.y = spawnY * tilemapMgr.getCurrentMap().getTileSize();
 	}
 
 	private float approach(float current, float target, float maxDelta) {

@@ -1,12 +1,12 @@
 package engine.inputs.controllers;
 
-import static engine.entities.Direction.DOWN;
-import static engine.entities.Direction.LEFT;
-import static engine.entities.Direction.RIGHT;
-import static engine.entities.Direction.UP;
+import static engine.entities.movement.Direction.DOWN;
+import static engine.entities.movement.Direction.LEFT;
+import static engine.entities.movement.Direction.RIGHT;
+import static engine.entities.movement.Direction.UP;
 
 import engine.entities.Entity;
-import engine.entities.MovementMode;
+import engine.entities.movement.MovementMode;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
 import engine.inputs.keybinds.Keybinds;

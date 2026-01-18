@@ -5,7 +5,7 @@ import java.awt.Color;
 import engine.core.Engine;
 import engine.entities.AnimatedPlayer2D;
 import engine.entities.EntityManager;
-import engine.entities.MovementMode;
+import engine.entities.movement.MovementMode;
 import engine.scene.AnimatedPlayerScene;
 import engine.scene.Scene2D;
 import entities.interaction.InteractibleNPC;

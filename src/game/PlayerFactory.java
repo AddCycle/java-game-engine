@@ -4,7 +4,7 @@ import engine.core.Engine;
 import engine.core.Logger;
 import engine.entities.AnimatedPlayer2D;
 import engine.entities.EntityManager;
-import engine.entities.MovementMode;
+import engine.entities.movement.MovementMode;
 import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
 import engine.inputs.keybinds.TopdownKeybinds;

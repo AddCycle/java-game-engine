@@ -1,7 +1,9 @@
 package engine.world;
 
+import engine.entities.Entity;
 import engine.entities.EntityManager;
 import engine.graphics.Renderer;
+import engine.world.map.MapConnection;
 import engine.world.map.TileMap;
 import engine.world.map.TileMapManager;
 import engine.world.map.TileMapRenderer;
@@ -11,7 +13,7 @@ public class PlatformerWorld implements World2D {
 	private TileMapRenderer tileMapRenderer = new TileMapRenderer();
 	private EntityManager entityManager;
 	private TileMap map;
-	
+
 	public PlatformerWorld(TileMapManager tilemapMgr, EntityManager entityManager) {
 		this.tilemapMgr = tilemapMgr;
 		this.map = tilemapMgr.getCurrentMap();
@@ -19,13 +21,31 @@ public class PlatformerWorld implements World2D {
 	}
 
 	@Override
-	public float getWidth()  { return map.getWidth() * map.getTileSize(); }
-	
-	@Override
-    public float getHeight() { return map.getHeight() * map.getTileSize(); }
+	public float getWidth() {
+		return map.getWidth() * map.getTileSize();
+	}
 
 	@Override
-	public void update(float dt) {}
+	public float getHeight() {
+		return map.getHeight() * map.getTileSize();
+	}
+
+	@Override
+	public void update(float dt) {
+		for (Entity e : entityManager.getEntities()) {
+			if (e.moving || e.vx != 0 || e.vy != 0) {
+				int oldTileX = e.tileX;
+				int oldTileY = e.tileY;
+
+				e.tileX = (int) (e.x / map.getTileSize());
+				e.tileY = (int) (e.y / map.getTileSize());
+
+				if (e.tileX != oldTileX || e.tileY != oldTileY) {
+					MapConnection.checkConnection(e, tilemapMgr);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void render(Renderer renderer, Camera cam) {
@@ -50,14 +70,6 @@ public class PlatformerWorld implements World2D {
 		}
 		return false;
 	}
-
-//	private void checkConnection(Entity p) {
-//		MapConnection c = map.getConnectionAt(p.tileX, p.tileY);
-//		if (c == null)
-//			return;
-//
-//		tilemapMgr.loadMap("resources/maps/" + c.targetMap + ".json", tilemapMgr.getTiles(), p, c.entryX, c.entryY);
-//	}
 
 	@Override
 	public TileMap getTileMap() {

@@ -1,4 +1,4 @@
-package engine.entities;
+package engine.entities.movement;
 
 public enum Direction {
 	LEFT("left"),
