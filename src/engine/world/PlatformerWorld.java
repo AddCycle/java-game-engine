@@ -49,7 +49,7 @@ public class PlatformerWorld implements World2D {
 
 	@Override
 	public void render(Renderer renderer, Camera cam) {
-		tileMapRenderer.render(map, renderer, cam);
+		tileMapRenderer.render(tilemapMgr.getTileset(), map, renderer, cam);
 	}
 
 	@Override

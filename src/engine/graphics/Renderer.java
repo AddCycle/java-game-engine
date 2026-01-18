@@ -62,6 +62,27 @@ public class Renderer {
 	    GL11.glPopAttrib();
 	}
 	
+	public void drawTile(Tileset tileset, int tileX, int tileY, float x, float y, float width, float height) {
+	    float[] uv = tileset.getTileUV(tileX, tileY); // u0,v0,u1,v1
+	    float u0 = uv[0], v0 = uv[1], u1 = uv[2], v1 = uv[3];
+
+	    GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+	    GL11.glPushMatrix();
+
+	    GL11.glEnable(GL11.GL_TEXTURE_2D);
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, tileset.getTextureID());
+
+	    GL11.glBegin(GL11.GL_QUADS);
+	        GL11.glTexCoord2f(u0, v0); GL11.glVertex2f(x, y);
+	        GL11.glTexCoord2f(u0, v1); GL11.glVertex2f(x, y + height);
+	        GL11.glTexCoord2f(u1, v1); GL11.glVertex2f(x + width, y + height);
+	        GL11.glTexCoord2f(u1, v0); GL11.glVertex2f(x + width, y);
+	    GL11.glEnd();
+
+	    GL11.glPopMatrix();
+	    GL11.glPopAttrib();
+	}
+	
 	private static float clampColor(float c) {
 		return Math.clamp(c, 0f, 1f);
 	}

@@ -7,6 +7,7 @@ import engine.core.Engine;
 import engine.core.Logger;
 import engine.entities.Entity;
 import engine.entities.EntityManager;
+import engine.graphics.Tileset;
 import engine.loader.TiledLoader;
 import engine.scene.Scene2D;
 
@@ -14,14 +15,14 @@ public class TileMapManager {
 	private Engine engine;
 	private EntityManager entityManager;
 	private TileMap currentMap;
+	private Tileset tileset; // TODO make a tileset array/hashmap in order to use multiple tilesets for different maps
 	private Scene2D scene;
-	private Tile[] tiles;
 	private Map<String, TileMap> maps = new HashMap<>();
 
-	public TileMapManager(Engine engine, EntityManager em, Tile[] tiles) {
+	public TileMapManager(Engine engine, EntityManager em, Tileset tileset) {
 		this.engine = engine;
 		this.entityManager = em;
-		this.tiles = tiles;
+		this.tileset = tileset;
 	}
 
 	public void setScene(Scene2D scene) {
@@ -35,7 +36,7 @@ public class TileMapManager {
 	 * @param mapPath
 	 */
 	public void addMap(String mapName, String mapPath) {
-		TileMap map = TiledLoader.loadFromJSON(mapPath, tiles, entityManager);
+		TileMap map = TiledLoader.loadFromJSON(mapPath, entityManager);
 		if (map == null) {
 			Logger.error("TileMapManager tried to load unexistent map : %s", mapName);
 			return;
@@ -54,28 +55,26 @@ public class TileMapManager {
 		currentMap = maps.get(mapName);
 
 		scene.getWorld().setTileMap(currentMap);
+
+		Logger.debug("TileMapManager successfully set map : %s to current", mapName);
 		
 		// entities setup
 		entityManager.clearEntitiesSafely();
 		entityManager.addAllSafely(currentMap.getEntities());
 
-//        player.tileX = spawnX;
-//        player.tileY = spawnY;
-//        player.x = spawnX * currentMap.getTileSize();
-//        player.y = spawnY * currentMap.getTileSize();
-		player.tileX = 0;
-		player.tileY = 0;
-		player.x = 0 * currentMap.getTileSize();
-		player.y = 0 * currentMap.getTileSize();
-
-		Logger.debug("TileMapManager successfully set map : %s to current", mapName);
+		int spawnX = 0;
+		int spawnY = 0;
+        player.tileX = spawnX;
+        player.tileY = spawnY;
+        player.x = spawnX * currentMap.getTileSize();
+        player.y = spawnY * currentMap.getTileSize();
 	}
 
 	public TileMap getCurrentMap() {
 		return currentMap;
 	}
 
-	public Tile[] getTiles() {
-		return tiles;
+	public Tileset getTileset() {
+		return tileset;
 	}
 }

@@ -17,8 +17,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
+import engine.graphics.Tileset;
+
 public class TextureLoader {
 	private ArrayList<Integer> textures = new ArrayList<>();
+	private ArrayList<Tileset> tilesets = new ArrayList<>();
 
 	public TextureLoader() {
 		
@@ -62,9 +65,19 @@ public class TextureLoader {
 	    return textureID;
 	}
 	
+	public Tileset loadTileset(String path, int tileSize) {
+		Tileset tileset = new Tileset(path, tileSize);
+		tilesets.add(tileset);
+		return tileset;
+	}
+	
 	public void destroyTextures() {
 		for (int texture : textures) {
 			GL11.glDeleteTextures(texture);
+		}
+		
+		for (Tileset tileset : tilesets) {
+			tileset.destroy();
 		}
 	}
 }

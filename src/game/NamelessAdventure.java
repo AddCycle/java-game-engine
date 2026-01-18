@@ -3,6 +3,7 @@ package game;
 import engine.core.Engine;
 import engine.core.Game;
 import engine.entities.EntityManager;
+import engine.graphics.Tileset;
 import engine.graphics.Window;
 import engine.inputs.Inputs;
 import engine.inputs.action.Action;
@@ -19,7 +20,6 @@ import engine.state.menu.MainMenuState;
 import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
 import engine.world.TopdownWorld;
-import engine.world.map.Tile;
 import engine.world.map.TileMapManager;
 import engine.world.physics.PlatformerPhysics;
 import engine.world.physics.TopdownPhysics;
@@ -30,8 +30,7 @@ public class NamelessAdventure implements Game {
 	private Engine engine;
 	private Keybinds generalKeys;
 	private TileMapManager tilemapMgr;
-	private int[] textures;
-	private Tile[] tuiles;
+	private Tileset tileset;
 	private AnimatedPlayerScene scene;
 	private PlayState playState;
 	private EntityManager entityManager;
@@ -52,10 +51,10 @@ public class NamelessAdventure implements Game {
 
 		entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
 
-		textures = TexturePresets.basicTiles(engine);
-		tuiles = TilePresets.basicTiles(engine, textures);
+		int tileSize = 16;
+		tileset = new Tileset("resources/tilesets/basic_tileset.png", tileSize);
 
-		tilemapMgr = new TileMapManager(engine, entityManager, tuiles);
+		tilemapMgr = new TileMapManager(engine, entityManager, tileset);
 		scene = TopdownGameSetup.create(engine, entityManager);
 
 		tilemapMgr.setScene(scene);
@@ -95,8 +94,6 @@ public class NamelessAdventure implements Game {
 	public void debug(int fps) {
 		drawDebugUI(fps);
 
-		// TODO : complete so the player can indeed change controller and other things
-		// relative to a platformer world
 		handleWorldSwitchDebug();
 	}
 

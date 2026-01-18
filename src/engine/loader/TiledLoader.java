@@ -14,7 +14,6 @@ import com.google.gson.JsonObject;
 import engine.core.Logger;
 import engine.entities.EntityManager;
 import engine.world.map.MapConnection;
-import engine.world.map.Tile;
 import engine.world.map.TileLayer;
 import engine.world.map.TileMap;
 import entities.interaction.InteractibleNPC;
@@ -22,7 +21,7 @@ import entities.interaction.PlayerInteractionTesting;
 
 public class TiledLoader {
 
-	public static TileMap loadFromJSON(String path, Tile[] tiles, EntityManager entityManager) {
+	public static TileMap loadFromJSON(String path, EntityManager entityManager) {
 		Gson gson = new Gson();
 		String json = null;
 
@@ -36,7 +35,6 @@ public class TiledLoader {
 
 		int tileSize = root.get("tilewidth").getAsInt();
 		TileMap map = new TileMap(tileSize);
-		map.setTiles(tiles);
 
 		JsonArray layers = root.getAsJsonArray("layers");
 

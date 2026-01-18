@@ -9,7 +9,6 @@ import engine.entities.Entity;
 
 public class TileMap {
 	private int width, height, tileSize;
-	private Tile[] tiles;
 	private List<Entity> entities = new ArrayList<>();
 	
 	private List<TileLayer> layers = new ArrayList<>();
@@ -24,10 +23,6 @@ public class TileMap {
 	 */
 	public TileMap(int tileSize) {
 		this.tileSize = tileSize;
-	}
-	
-	public void setTiles(Tile[] tiles) {
-	    this.tiles = tiles;
 	}
 	
 	public void addLayer(TileLayer layer) {
@@ -73,10 +68,10 @@ public class TileMap {
 	        if (!layer.isCollisionLayer()) continue;
 
 	        int tileId = layer.get(x, y);
-	        if (tileId == 0) continue; 
-	        boolean solid = tiles[tileId - 1].solid;
-//	        Logger.debug("Checking tile " + tileId + " at ("+x+","+y+"): solid=" + solid);
-	        if (solid) return true;
+	        if (tileId == 0) {
+	        		return false;
+	        }
+	        return true;
 	    }
 	    return false;
 	}
@@ -95,10 +90,6 @@ public class TileMap {
 
 	public List<MapConnection> getConnections() {
 		return connections;
-	}
-
-	public Tile getTile(int id) {
-		return tiles[id];
 	}
 
 	public List<Entity> getEntities() {
