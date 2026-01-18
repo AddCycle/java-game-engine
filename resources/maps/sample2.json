@@ -88,7 +88,7 @@
          "height":20,
          "id":3,
          "name":"collision",
-         "opacity":0.19,
+         "opacity":0.2,
          "type":"tilelayer",
          "visible":true,
          "width":20,
@@ -151,9 +151,60 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":10.9090909090909,
-                 "x":114.545454545455,
-                 "y":33.8181818181818
+                 "width":10.9091,
+                 "x":114.545,
+                 "y":33.8182
+                }, 
+                {
+                 "height":12,
+                 "id":6,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Press 0 to hide\/show debug win"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.9091,
+                 "x":18.545,
+                 "y":145.8182
+                }, 
+                {
+                 "height":12,
+                 "id":7,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Press TAB key to secret"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.9091,
+                 "x":290.795,
+                 "y":290.3182
+                }, 
+                {
+                 "height":12,
+                 "id":5,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Are you enjoying my hardwork ?!"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.9091,
+                 "x":306.545,
+                 "y":162.5682
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -162,7 +213,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":5,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.11.2",

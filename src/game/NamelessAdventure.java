@@ -10,12 +10,14 @@ import engine.inputs.action.Action;
 import engine.inputs.controllers.PlatformerController;
 import engine.inputs.controllers.PlayerController2D;
 import engine.inputs.controllers.TopdownController;
+import engine.inputs.keybinds.DialogKeybinds;
 import engine.inputs.keybinds.GeneralKeybinds;
 import engine.inputs.keybinds.Keybinds;
 import engine.inputs.keybinds.PlatformerKeybinds;
 import engine.inputs.keybinds.PlayKeybinds;
 import engine.inputs.keybinds.TopdownKeybinds;
 import engine.scene.AnimatedPlayerScene;
+import engine.state.dialog.DialogState;
 import engine.state.menu.MainMenuState;
 import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
@@ -81,12 +83,8 @@ public class NamelessAdventure implements Game {
 		}
 
 		if (generalKeys.isJustPressed(input, Action.TAB)) {
-			tilemapMgr.setCurrentMap("sample2", scene.getPlayer());
-			if (entityManager.getPhysics() instanceof TopdownPhysics) {
-				scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
-			} else if (entityManager.getPhysics() instanceof PlatformerPhysics) {
-				scene.setWorld(new PlatformerWorld(tilemapMgr, entityManager));
-			}
+//			tilemapMgr.setCurrentMap("sample1", scene.getPlayer());
+			engine.getGameStateManager().push(new DialogState("You are now stuck here forever... (Just kidding)", new DialogKeybinds()), engine);
 		}
 	}
 
@@ -100,10 +98,10 @@ public class NamelessAdventure implements Game {
 	private void drawDebugUI(int fps) {
 		ImGui.begin("Debug");
 
-		ImGui.text("FPS" + fps);
-		ImGui.sliderFloat("Parallax speed", parallaxSpeed, 0.0f, 5.0f);
-		ImGui.checkbox("Show grid", showGrid);
-		ImGui.checkbox("Using ? topdown physics (true) : platformers one (false)", usingTopdownPhysics);
+		ImGui.text("FPS: " + fps);
+		ImGui.checkbox("topdown (check) or platformer (uncheck)", usingTopdownPhysics);
+		ImGui.sliderFloat("Parallax speed (not working here)", parallaxSpeed, 0.0f, 5.0f);
+		ImGui.checkbox("Show grid (not working)", showGrid);
 
 		ImGui.end();
 	}

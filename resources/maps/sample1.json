@@ -124,6 +124,40 @@
                  "width":8.8125,
                  "x":34.8125,
                  "y":20.0625
+                }, 
+                {
+                 "height":9.1875,
+                 "id":7,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Jean Michel is lo... F11 show\/hide fullscreen"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8.8125,
+                 "x":35.1761363636364,
+                 "y":131.607954545455
+                }, 
+                {
+                 "height":9.1875,
+                 "id":8,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"Emmanuel Macron is a ptr*... NEXT LEVEL HOLE"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8.8125,
+                 "x":82.5397727272727,
+                 "y":131.698863636364
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -132,7 +166,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":7,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.11.2",
