@@ -83,8 +83,6 @@ public class Engine {
 
 			int fps = (int)(1.0f / dt);
 
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
 			/* ImGui part testing */
 			imgui.begin();
 			inputs.update();
@@ -98,6 +96,8 @@ public class Engine {
 
 			gsm.update(dt);
 			game.update(dt);
+
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 			gsm.render(renderer);
 
