@@ -37,7 +37,7 @@ public class NamelessAdventure implements Game {
 	private EntityManager entityManager;
 
 	// DEBUG VARIABLES
-	private final float[] parallaxSpeed = new float[] {0.5f};
+	private final float[] parallaxSpeed = new float[] { 0.5f };
 	private final ImBoolean showGrid = new ImBoolean(true);
 	// TODO : get rid of it when finished
 	private final ImBoolean usingTopdownPhysics = new ImBoolean(true); // only to test platformer physics too
@@ -51,7 +51,7 @@ public class NamelessAdventure implements Game {
 		generalKeys = new GeneralKeybinds();
 
 		entityManager = new EntityManager(engine.getCamera(), new TopdownPhysics());
-		
+
 		textures = TexturePresets.basicTiles(engine);
 		tuiles = TilePresets.basicTiles(engine, textures);
 
@@ -79,7 +79,11 @@ public class NamelessAdventure implements Game {
 
 		if (generalKeys.isJustPressed(input, Action.TAB)) {
 			tilemapMgr.loadMap("resources/maps/sample2.json", tuiles, scene.getPlayer(), 0, 0);
-			scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
+			if (entityManager.getPhysics() instanceof TopdownPhysics) {
+				scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
+			} else if (entityManager.getPhysics() instanceof PlatformerPhysics) {
+				scene.setWorld(new PlatformerWorld(tilemapMgr, entityManager));
+			}
 		}
 
 //		if (generalKeys.isJustPressed(input, Action.TAB)) {
@@ -87,23 +91,14 @@ public class NamelessAdventure implements Game {
 //			scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
 //		}
 	}
-	
+
 	@Override
 	public void debug() {
 		drawDebugUI();
-		
-		// TODO : complete so the player can indeed change controller and other things relative to a platformer world
-		if ((entityManager.getPhysics() instanceof TopdownPhysics) && !usingTopdownPhysics.get()) {
-			PlayerController2D controller = new PlatformerController(engine.getInput(), new PlatformerKeybinds());
-			scene.getPlayer().setController(controller);
-			entityManager.setPhysics(new PlatformerPhysics());
-			scene.setWorld(new PlatformerWorld(tilemapMgr.getCurrentMap()));
-		} else if ((entityManager.getPhysics() instanceof PlatformerPhysics) && usingTopdownPhysics.get()) {
-			PlayerController2D controller = new TopdownController(engine.getInput(), new TopdownKeybinds());
-			scene.getPlayer().setController(controller);
-			entityManager.setPhysics(new TopdownPhysics());
-			scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
-		}
+
+		// TODO : complete so the player can indeed change controller and other things
+		// relative to a platformer world
+		handleWorldSwitchDebug();
 	}
 
 	private void drawDebugUI() {
@@ -114,5 +109,19 @@ public class NamelessAdventure implements Game {
 		ImGui.checkbox("Using ? topdown physics (true) : platformers one (false)", usingTopdownPhysics);
 
 		ImGui.end();
+	}
+
+	private void handleWorldSwitchDebug() {
+		if ((entityManager.getPhysics() instanceof TopdownPhysics) && !usingTopdownPhysics.get()) {
+			PlayerController2D controller = new PlatformerController(engine.getInput(), new PlatformerKeybinds());
+			scene.getPlayer().setController(controller);
+			entityManager.setPhysics(new PlatformerPhysics());
+			scene.setWorld(new PlatformerWorld(tilemapMgr, entityManager));
+		} else if ((entityManager.getPhysics() instanceof PlatformerPhysics) && usingTopdownPhysics.get()) {
+			PlayerController2D controller = new TopdownController(engine.getInput(), new TopdownKeybinds());
+			scene.getPlayer().setController(controller);
+			entityManager.setPhysics(new TopdownPhysics());
+			scene.setWorld(new TopdownWorld(tilemapMgr, entityManager));
+		}
 	}
 }
