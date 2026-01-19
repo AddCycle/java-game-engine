@@ -11,6 +11,7 @@ import engine.inputs.Inputs;
 import engine.loader.Loader;
 import engine.state.GameState;
 import engine.state.GameStateManager;
+import engine.ui.UIManager;
 import engine.world.Camera;
 
 public class Engine {
@@ -28,6 +29,10 @@ public class Engine {
 	private boolean fullscreen;
 	private boolean debug;
 	private int debugKey = GLFW.GLFW_KEY_0;
+	private UIManager uiManager;
+	
+	public static final int CAMERA_WIDTH = 320;
+	public static final int CAMERA_HEIGHT = 180;
 
 	public Engine(Builder builder) {
 		this.vsync = builder.vsync;
@@ -38,7 +43,8 @@ public class Engine {
 
 		window = new Window(builder.width, builder.height, builder.title, builder.icon);
 		loader = new Loader();
-		camera = new Camera(320, 180); // TODO: make settings variable(16:9) aspect ratio by default leading to black
+		camera = new Camera(CAMERA_WIDTH, CAMERA_HEIGHT); // TODO: make settings variable(16:9) aspect ratio by default leading to black
+		uiManager = new engine.ui.UIManager(this);
 										// bars
 		renderer = new Renderer(camera, loader);
 		gsm = new GameStateManager();
@@ -193,6 +199,10 @@ public class Engine {
 
 	public GameStateManager getGameStateManager() {
 		return gsm;
+	}
+
+	public UIManager getUIManager() {
+		return uiManager;
 	}
 
 	public ImGuiLayer getImGui() {

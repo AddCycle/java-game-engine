@@ -9,9 +9,11 @@ import engine.state.play.PlayState;
 
 public class PauseState extends MenuState {
 	private PlayState playState;
+	private MainMenuState menuState;
 	
-	public PauseState(PlayState playState) {
+	public PauseState(MainMenuState menuState, PlayState playState) {
 		this.playState = playState;
+		this.menuState = menuState;
 	}
 
 	@Override
@@ -20,7 +22,7 @@ public class PauseState extends MenuState {
 	            new MenuItem("Resume", () ->
 	                engine.getGameStateManager().pop()),
 	            new MenuItem("Quit to Title", () ->
-	                engine.getGameStateManager().set(new MainMenuState(playState), engine))
+	                engine.getGameStateManager().set(menuState, engine))
 	        );
 	}
 	

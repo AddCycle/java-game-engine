@@ -14,16 +14,18 @@ import engine.inputs.keybinds.Keybinds;
 import engine.scene.Scene2D;
 import engine.state.GameState;
 import engine.state.dialog.DialogState;
+import engine.state.menu.presets.PauseState;
 
 public class PlayState implements GameState {
 	private Engine engine;
 	private Scene2D scene;
 	private Keybinds keybinds;
-	
+	private PauseState pauseState;
+
 	public PlayState(Scene2D scene, Keybinds keybinds) {
-        this.scene = scene; // pass the scene you already have
-        this.keybinds = keybinds;
-    }
+		this.scene = scene; // pass the scene you already have
+		this.keybinds = keybinds;
+	}
 
 	@Override
 	public void init(Engine engine) {
@@ -35,19 +37,24 @@ public class PlayState implements GameState {
 		Inputs input = engine.getInput();
 
 		scene.update(dt);
-		
+
 		Entity player = scene.getPlayer();
 
-	    if (player.wantsToInteract()) {
-	        InteractionResult result = InteractionSystem.tryInteract(player, player.getInteractionBox(8), scene.getEntities());
-	        handleInteraction(result);
-	        player.wantsToInteract = false;
-	    }
+		if (player.wantsToInteract()) {
+			InteractionResult result = InteractionSystem.tryInteract(player, player.getInteractionBox(8),
+					scene.getEntities());
+			handleInteraction(result);
+			player.wantsToInteract = false;
+		}
 
 		if (keybinds.isJustPressed(input, Action.PAUSE)) {
-			Logger.debug("switched to gamestate pause");
+			if (pauseState == null) {
+				Logger.warn("No pauseState found");
+			} else {
+				Logger.debug("switched to gamestate pause");
+				engine.getGameStateManager().push(pauseState, engine);
 //			engine.getGameStateManager().push(new engine.state.menu.PauseState(new PauseKeybinds()), engine);
-			engine.getGameStateManager().push(new engine.state.menu.presets.PauseState(this), engine);
+			}
 		}
 	}
 
@@ -57,7 +64,8 @@ public class PlayState implements GameState {
 	}
 
 	@Override
-	public void dispose() {}
+	public void dispose() {
+	}
 
 	@Override
 	public boolean blocksRenderBelow() {
@@ -65,12 +73,15 @@ public class PlayState implements GameState {
 	}
 
 	private void handleInteraction(InteractionResult result) {
-		if (result == null) return;
+		if (result == null)
+			return;
 
-	    if (result.type() == InteractionType.DIALOG) {
-	        engine.getGameStateManager().push(
-	            new DialogState(result.text(), new DialogKeybinds()), engine
-	        );
-	    }
+		if (result.type() == InteractionType.DIALOG) {
+			engine.getGameStateManager().push(new DialogState(result.text(), new DialogKeybinds()), engine);
+		}
+	}
+
+	public void setPauseState(PauseState pauseState) {
+		this.pauseState = pauseState;
 	}
 }

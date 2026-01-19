@@ -8,6 +8,7 @@ import engine.state.menu.core.Menu;
 public abstract class MenuState implements GameState {
 	protected Menu menu;
 	protected Engine engine;
+	protected int backgroundTexture = -1;
 
 	@Override
 	public void init(Engine engine) {
@@ -25,11 +26,18 @@ public abstract class MenuState implements GameState {
 
 	@Override
 	public void render(Renderer renderer) {
+		if (backgroundTexture != -1) {
+			renderer.drawTexturedRect(backgroundTexture, 0, 0, engine.getCamera().width, engine.getCamera().height);
+		}
 		menu.render(renderer);
 	}
 
 	@Override
 	public void dispose() {
 		menu.onClose();
+	}
+	
+	public void setBackgroundTexture(int textureID) {
+		backgroundTexture = textureID;
 	}
 }

@@ -19,6 +19,7 @@ import engine.inputs.keybinds.TopdownKeybinds;
 import engine.scene.AnimatedPlayerScene;
 import engine.state.dialog.DialogState;
 import engine.state.menu.MainMenuState;
+import engine.state.menu.presets.PauseState;
 import engine.state.play.PlayState;
 import engine.world.PlatformerWorld;
 import engine.world.TopdownWorld;
@@ -28,20 +29,30 @@ import engine.world.physics.TopdownPhysics;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
+/**
+ * TODO : write proper test games & classes in order to make a covering testsuite
+ * to manage things and not worry on them being broken or not...
+ */
 public class NamelessAdventure implements Game {
 	private Engine engine;
 	private Keybinds generalKeys;
 	private TileMapManager tilemapMgr;
 	private Tileset tileset;
 	private AnimatedPlayerScene scene;
-	private PlayState playState;
 	private EntityManager entityManager;
+	
+	// GameStates
+	private MainMenuState mainMenuState;
+	private PlayState playState;
+	private PauseState pauseState;
 
 	// DEBUG VARIABLES
 	private final float[] parallaxSpeed = new float[] { 0.5f };
 	private final ImBoolean showGrid = new ImBoolean(true);
 	// TODO : get rid of it when finished
 	private final ImBoolean usingTopdownPhysics = new ImBoolean(true); // only to test platformer physics too
+	
+	private int backgroundTexture = -1; // background menu texture
 
 	public NamelessAdventure(Engine engine) {
 		this.engine = engine;
@@ -55,6 +66,7 @@ public class NamelessAdventure implements Game {
 
 		int tileSize = 16;
 		tileset = new Tileset("resources/tilesets/basic_tileset.png", tileSize);
+		backgroundTexture = engine.getLoader().getTextureLoader().loadTexture("resources/backgrounds/main_menu.png");
 
 		tilemapMgr = new TileMapManager(engine, entityManager, tileset);
 		scene = TopdownGameSetup.create(engine, entityManager);
@@ -69,8 +81,15 @@ public class NamelessAdventure implements Game {
 
 		tilemapMgr.setCurrentMap("sample1", scene.getPlayer());
 
+		// gamestates init
 		playState = new PlayState(scene, new PlayKeybinds());
-		engine.setState(new MainMenuState(playState));
+		mainMenuState = new MainMenuState(playState);
+		mainMenuState.setBackgroundTexture(backgroundTexture);
+		pauseState = new PauseState(mainMenuState, playState);
+		
+		playState.setPauseState(pauseState);
+
+		engine.setState(mainMenuState);
 	}
 
 	@Override

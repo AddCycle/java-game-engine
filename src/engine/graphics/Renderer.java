@@ -66,14 +66,14 @@ public class Renderer {
 	    GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
 	    GL11.glPushMatrix();
 
-	    GL11.glEnable(GL11.GL_TEXTURE_2D);
-	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, tileset.getTextureID());
+	    glEnable(GL11.GL_TEXTURE_2D);
+	    glBindTexture(GL11.GL_TEXTURE_2D, tileset.getTextureID());
 
 	    GL11.glBegin(GL11.GL_QUADS);
-	        GL11.glTexCoord2f(u0, v0); GL11.glVertex2f(x, y);
-	        GL11.glTexCoord2f(u0, v1); GL11.glVertex2f(x, y + height);
-	        GL11.glTexCoord2f(u1, v1); GL11.glVertex2f(x + width, y + height);
-	        GL11.glTexCoord2f(u1, v0); GL11.glVertex2f(x + width, y);
+	        glTexCoord2f(u0, v0); glVertex2f(x, y);
+	        glTexCoord2f(u0, v1); glVertex2f(x, y + height);
+	        glTexCoord2f(u1, v1); glVertex2f(x + width, y + height);
+	        glTexCoord2f(u1, v0); glVertex2f(x + width, y);
 	    GL11.glEnd();
 
 	    GL11.glPopMatrix();
@@ -137,46 +137,48 @@ public class Renderer {
 	}
 	
 	// TODO : move & tweak everything inside the UI Layer when done
-//	public void drawDialogBox(float x, float y, float w, float h) {
-//	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
-//	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
-//	}
-//
-//	public void drawTextCenteredH(String text, float x, float y, int charW, int charH) {
-//		float textW = text.length() * charW;
-//
-//		float x1 = x - textW / 2f;
-//
-//		drawText(text, x1, y, charW, charH);
-//	}
-//
-//	public void drawTextCenteredV(String text, float x, float y, int charW, int charH) {
-//		float y1 = y - charH / 2f;
-//
-//		drawText(text, x, y1, charW, charH);
-//	}
-//
-//	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
-//		float textW = text.length() * charW;
-//
-//		float x1 = x - textW / 2f;
-//		float y1 = y - charH / 2f;
-//		
-//		drawText(text, x1, y1, charW, charH);
-//	}
-//	
-//	public void drawTextCenteredInBounds(String text, float width, float height) {
-//		int charW = 8;
-//		int charH = 8;
-//
-//		float textW = text.length() * charW;
-//		float textH = charH;
-//
-//		float x = width / 2f - textW / 2f;
-//		float y = height / 2f - textH / 2f;
-//
-//		drawText(text, x, y, charW, charH);
-//	}
+	public void drawDialogBox(float x, float y, float w, float h) {
+	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
+	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
+	}
+
+	public void drawTextCenteredH(String text, float x, float y, int charW, int charH) {
+		float textW = text.length() * charW;
+
+		float x1 = x - textW / 2f;
+
+		drawText(text, x1, y, charW, charH);
+	}
+
+	public void drawTextCenteredV(String text, float x, float y, int charW, int charH) {
+		float y1 = y - charH / 2f;
+
+		drawText(text, x, y1, charW, charH);
+	}
+
+	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
+		float textW = text.length() * charW;
+
+		float x1 = x - textW / 2f;
+		float y1 = y - charH / 2f;
+		
+		drawText(text, x1, y1, charW, charH);
+	}
+	
+	public void drawTextCenteredInBounds(String text, float width, float height) {
+		int charW = 8;
+		int charH = 8;
+
+		float textW = text.length() * charW;
+		float textH = charH;
+
+		float x = width / 2f - textW / 2f;
+		float y = height / 2f - textH / 2f;
+
+		drawText(text, x, y, charW, charH);
+	}
+	
+	/* End of moving */
 
 	public void drawText(String text, float x, float y) {
 	    float startX = x;
