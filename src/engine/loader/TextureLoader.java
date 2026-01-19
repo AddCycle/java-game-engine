@@ -20,11 +20,12 @@ import org.lwjgl.system.MemoryStack;
 import engine.graphics.Tileset;
 
 public class TextureLoader {
+	private Loader loader;
 	private ArrayList<Integer> textures = new ArrayList<>();
 	private ArrayList<Tileset> tilesets = new ArrayList<>();
 
-	public TextureLoader() {
-		
+	public TextureLoader(Loader loader) {
+		this.loader = loader;
 	}
 
 	public int loadTexture(String path) {

@@ -3,7 +3,7 @@ package engine.state.menu;
 import engine.core.Engine;
 import engine.graphics.Renderer;
 import engine.state.GameState;
-import engine.ui.menu.Menu;
+import engine.state.menu.core.Menu;
 
 public abstract class MenuState implements GameState {
 	protected Menu menu;

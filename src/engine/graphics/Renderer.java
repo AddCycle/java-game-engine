@@ -1,5 +1,6 @@
 package engine.graphics;
 
+import static engine.math.MathHelper.clampColor;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
@@ -12,34 +13,30 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import org.lwjgl.opengl.GL11;
 
 import engine.core.Logger;
+import engine.loader.FontLoader;
+import engine.loader.Loader;
 import engine.loader.TextureLoader;
 import engine.world.Camera;
 
+/**
+ * TODO : renderer too complicated, should only tell how to render / not what to render
+ * TODO : make a separate layer around UI to what to draw, dialog boxes...
+ */
 public class Renderer {
 	private TextureLoader textureLoader;
-	private int fontTexture;
+	private FontLoader fontLoader;
 	private Camera camera;
 //	public static float ZOOM = 1.0f; // 2x, 3x, 0.75f, etc.
-	public static final float WORLD_W = 1280;
-	public static final float WORLD_H = 800;
 
 	private static final int FONT_COLS = 32;
 	private static final int FONT_ROWS = 4;
 
-	public Renderer(Camera camera, TextureLoader texLoader) {
+	public Renderer(Camera camera, Loader loader) {
 		this.camera = camera;
-		this.textureLoader = texLoader;
+		this.textureLoader = loader.getTextureLoader();
+		this.fontLoader = loader.getFontLoader();
 	}
 
-	// TODO: move to a font loader later
-	public void loadFont(String path) {
-	    fontTexture = loadTexture(path);
-	}
-	
-	public void loadDefaultFont() {
-	    loadFont("resources/assets/font.png");
-	}
-	
 	public int loadTexture(String texPath) {
 		return textureLoader.loadTexture(texPath);
 	}
@@ -81,10 +78,6 @@ public class Renderer {
 
 	    GL11.glPopMatrix();
 	    GL11.glPopAttrib();
-	}
-	
-	private static float clampColor(float c) {
-		return Math.clamp(c, 0f, 1f);
 	}
 
 	public static void drawRect(float x, float y, float width, float height, float r, float g, float b) {
@@ -143,46 +136,47 @@ public class Renderer {
 	    Logger.info("updated viewport %d,%d", windowW, windowH);
 	}
 	
-	public void drawDialogBox(float x, float y, float w, float h) {
-	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
-	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
-	}
-
-	public void drawTextCenteredH(String text, float x, float y, int charW, int charH) {
-		float textW = text.length() * charW;
-
-		float x1 = x - textW / 2f;
-
-		drawText(text, x1, y, charW, charH);
-	}
-
-	public void drawTextCenteredV(String text, float x, float y, int charW, int charH) {
-		float y1 = y - charH / 2f;
-
-		drawText(text, x, y1, charW, charH);
-	}
-
-	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
-		float textW = text.length() * charW;
-
-		float x1 = x - textW / 2f;
-		float y1 = y - charH / 2f;
-		
-		drawText(text, x1, y1, charW, charH);
-	}
-	
-	public void drawTextCenteredInBounds(String text, float width, float height) {
-		int charW = 8;
-		int charH = 8;
-
-		float textW = text.length() * charW;
-		float textH = charH;
-
-		float x = width / 2f - textW / 2f;
-		float y = height / 2f - textH / 2f;
-
-		drawText(text, x, y, charW, charH);
-	}
+	// TODO : move & tweak everything inside the UI Layer when done
+//	public void drawDialogBox(float x, float y, float w, float h) {
+//	    Renderer.drawRect(x, y, w, h, 1f, 1f, 1f);      // border
+//	    Renderer.drawRect(x+2, y+2, w-4, h-4, 0f, 0f, 0f); // background
+//	}
+//
+//	public void drawTextCenteredH(String text, float x, float y, int charW, int charH) {
+//		float textW = text.length() * charW;
+//
+//		float x1 = x - textW / 2f;
+//
+//		drawText(text, x1, y, charW, charH);
+//	}
+//
+//	public void drawTextCenteredV(String text, float x, float y, int charW, int charH) {
+//		float y1 = y - charH / 2f;
+//
+//		drawText(text, x, y1, charW, charH);
+//	}
+//
+//	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
+//		float textW = text.length() * charW;
+//
+//		float x1 = x - textW / 2f;
+//		float y1 = y - charH / 2f;
+//		
+//		drawText(text, x1, y1, charW, charH);
+//	}
+//	
+//	public void drawTextCenteredInBounds(String text, float width, float height) {
+//		int charW = 8;
+//		int charH = 8;
+//
+//		float textW = text.length() * charW;
+//		float textH = charH;
+//
+//		float x = width / 2f - textW / 2f;
+//		float y = height / 2f - textH / 2f;
+//
+//		drawText(text, x, y, charW, charH);
+//	}
 
 	public void drawText(String text, float x, float y) {
 	    float startX = x;
@@ -219,6 +213,12 @@ public class Renderer {
 	private void drawChar(char c, float x, float y, int charW, int charH) {
 	    int ascii = c;
 
+	    int font = fontLoader.getFontTexture();
+	    if (font == -1) {
+	    		Logger.error("Trying to drawChar without loading a font texture before in Renderer");
+	    		return;
+	    }
+
 	    int col = ascii % FONT_COLS;
 	    int row = ascii / FONT_COLS;
 
@@ -229,7 +229,7 @@ public class Renderer {
 
 	    GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
 	    GL11.glEnable(GL11.GL_TEXTURE_2D);
-	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, fontTexture);
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, font);
 
 	    GL11.glBegin(GL11.GL_QUADS);
 	    glTexCoord2f(u, v);                 glVertex2f(x, y);

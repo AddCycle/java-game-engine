@@ -1,4 +1,4 @@
-package engine.ui.menu;
+package engine.state.menu.core;
 
 public class MenuItem {
 	public final String label;

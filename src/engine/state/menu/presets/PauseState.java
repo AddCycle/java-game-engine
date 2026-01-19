@@ -2,10 +2,10 @@ package engine.state.menu.presets;
 
 import engine.state.menu.MainMenuState;
 import engine.state.menu.MenuState;
+import engine.state.menu.core.Menu;
+import engine.state.menu.core.MenuItem;
+import engine.state.menu.core.VerticalMenu;
 import engine.state.play.PlayState;
-import engine.ui.menu.Menu;
-import engine.ui.menu.MenuItem;
-import engine.ui.menu.VerticalMenu;
 
 public class PauseState extends MenuState {
 	private PlayState playState;

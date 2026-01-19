@@ -1,4 +1,4 @@
-package engine.ui.menu;
+package engine.state.menu.core;
 
 import engine.graphics.Renderer;
 

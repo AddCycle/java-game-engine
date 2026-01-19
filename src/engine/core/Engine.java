@@ -40,7 +40,7 @@ public class Engine {
 		loader = new Loader();
 		camera = new Camera(320, 180); // TODO: make settings variable(16:9) aspect ratio by default leading to black
 										// bars
-		renderer = new Renderer(camera, loader.getTextureLoader());
+		renderer = new Renderer(camera, loader);
 		gsm = new GameStateManager();
 		imgui = new ImGuiLayer();
 	}
@@ -56,10 +56,9 @@ public class Engine {
 	private void init() {
 		window.create(renderer);
 
-		// ImGui setup debugging purposes first-time using this...
 		imgui.init(window.getId());
 
-		renderer.loadDefaultFont();
+		loader.getFontLoader().loadDefaultFont();
 
 		if (vsync)
 			window.enableVSync();
@@ -83,7 +82,6 @@ public class Engine {
 
 			int fps = (int)(1.0f / dt);
 
-			/* ImGui part testing */
 			imgui.begin();
 			inputs.update();
 			window.pollEvents();
@@ -98,7 +96,6 @@ public class Engine {
 			game.update(dt);
 
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
 			gsm.render(renderer);
 
 			if (debug) game.debug(fps);
