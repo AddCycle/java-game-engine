@@ -1,6 +1,9 @@
 package engine.ui;
 
 import engine.core.Engine;
+import engine.graphics.Renderer;
+import engine.ui.components.UIComponent;
+import engine.ui.components.UIPanel;
 
 /**
  * TODO : make it hold every UIComponent and handles update & render ?
@@ -11,14 +14,28 @@ import engine.core.Engine;
 public class UIManager {
 	private Engine engine;
 	private float displayWidth, displayHeight;
+	private UIComponent root;
 	
 	public UIManager(Engine engine) {
 		this.engine = engine;
-		getDisplayGeometry();
+		displayWidth = engine.getCamera().width;
+	    displayHeight = engine.getCamera().height;
+	    root = new UIPanel(0, 0, displayWidth, displayHeight, null);
 	}
 	
-	public void getDisplayGeometry() {
-		displayWidth = engine.getCamera().width;
-		displayHeight = engine.getCamera().height;
+	public UIComponent getRoot() {
+        return root;
+    }
+
+    public void render(Renderer r) {
+        root.render(r);
+    }
+	
+	public float getDisplayWidth() {
+		return displayWidth;
+	}
+	
+	public float getDisplayHeight() {
+		return displayHeight;
 	}
 }

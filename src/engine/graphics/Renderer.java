@@ -10,12 +10,15 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import engine.core.Logger;
 import engine.loader.FontLoader;
 import engine.loader.Loader;
 import engine.loader.TextureLoader;
+import engine.math.MathHelper;
 import engine.world.Camera;
 
 /**
@@ -78,6 +81,11 @@ public class Renderer {
 
 	    GL11.glPopMatrix();
 	    GL11.glPopAttrib();
+	}
+	
+	public static void drawRect(float x, float y, float width, float height, Color c) {
+		float[] colors = MathHelper.convertColor(c);
+		drawRect(x, y, width, height, colors[0], colors[1], colors[2]);
 	}
 
 	public static void drawRect(float x, float y, float width, float height, float r, float g, float b) {

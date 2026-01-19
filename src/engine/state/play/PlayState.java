@@ -15,12 +15,15 @@ import engine.scene.Scene2D;
 import engine.state.GameState;
 import engine.state.dialog.DialogState;
 import engine.state.menu.presets.PauseState;
+import engine.ui.UIManager;
+import engine.ui.hud.PlayHUD;
 
 public class PlayState implements GameState {
 	private Engine engine;
 	private Scene2D scene;
 	private Keybinds keybinds;
 	private PauseState pauseState;
+	private PlayHUD playHud;
 
 	public PlayState(Scene2D scene, Keybinds keybinds) {
 		this.scene = scene; // pass the scene you already have
@@ -30,6 +33,10 @@ public class PlayState implements GameState {
 	@Override
 	public void init(Engine engine) {
 		this.engine = engine;
+		
+		/* TEMP UI Testing */
+		UIManager uiManager = engine.getUIManager();
+		this.playHud = new PlayHUD(uiManager);
 	}
 
 	@Override
@@ -61,6 +68,7 @@ public class PlayState implements GameState {
 	@Override
 	public void render(Renderer renderer) {
 		scene.render(renderer, engine.getCamera());
+		playHud.render(renderer);
 	}
 
 	@Override

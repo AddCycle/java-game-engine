@@ -1,6 +1,7 @@
 package engine.ui.constraints;
 
 public enum Anchor {
-	TOP_LEFT, CENTER, TOP_RIGHT,
-    BOTTOM_LEFT, BOTTOM_RIGHT;
+	TOP_LEFT, TOP_CENTER, TOP_RIGHT,
+	CENTER,
+    BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT;
 }
