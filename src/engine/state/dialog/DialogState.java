@@ -35,6 +35,7 @@ public class DialogState implements GameState {
         float x = 30;
         float y = 120;
 
+        // FIXME : add another layer to draw everything 
         renderer.drawDialogBox(x, y, w, h);
         renderer.drawText(text, x + 8, y + 16, 8, 8);
 	}

@@ -250,4 +250,30 @@ public class Renderer {
 
 	    GL11.glPopAttrib();
 	}
+	
+	/**
+	 * This function uses temp functions TODO : fix => should calculate based on font
+	 * @return width & height of the text based on default font sprite
+	 */
+	public static int[] calculateTextDimensions(String text) {
+		int w = text.length() * getDefaultCharWidth();
+		int h = getDefaultCharHeight();
+		return new int[] {w, h};
+	}
+	
+	/**
+	 * TODO : remove temporary function for ui
+	 * @return
+	 */
+	public static int getDefaultCharWidth() {
+		return 8;
+	}
+
+	/**
+	 * TODO : remove temporary function for ui
+	 * @return
+	 */
+	public static int getDefaultCharHeight() {
+		return 8;
+	}
 }
