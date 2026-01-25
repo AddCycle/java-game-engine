@@ -36,6 +36,10 @@ public abstract class UIComponent {
 	public void remove(int index) {
 		children.remove(index);
 	}
+
+	public UIComponent popChild() {
+		return children.removeLast();
+	}
 	
 	protected abstract void drawSelf(Renderer r);
 
@@ -144,6 +148,22 @@ public abstract class UIComponent {
 
 	public float getInnerHeight() {
 	    return height - padding.up - padding.down;
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
 	}
 
 	public float getWidth() {

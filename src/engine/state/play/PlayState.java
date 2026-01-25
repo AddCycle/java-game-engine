@@ -1,5 +1,7 @@
 package engine.state.play;
 
+import com.sun.source.tree.BinaryTree;
+
 import engine.core.Engine;
 import engine.core.Logger;
 import engine.entities.Entity;
@@ -68,7 +70,7 @@ public class PlayState implements GameState {
 	@Override
 	public void render(Renderer renderer) {
 		scene.render(renderer, engine.getCamera());
-		playHud.render(renderer);
+//		playHud.render(renderer);
 	}
 
 	@Override

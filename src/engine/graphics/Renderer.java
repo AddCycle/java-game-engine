@@ -122,6 +122,43 @@ public class Renderer {
 	    GL11.glPopAttrib();
 	}
 
+	public static void drawLine(float x1, float y1, float x2, float y2) {
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glPushMatrix();
+		
+		GL11.glColor3f(1f, 1f, 1f);
+		GL11.glBegin(GL11.GL_LINES);
+
+		GL11.glVertex2d(x1, y1);
+		GL11.glVertex2d(x2, y2);
+
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	    GL11.glPopAttrib();
+	}
+
+	public static void drawLine(float x1, float y1, float x2, float y2, Color c) {
+		float[] colors = MathHelper.convertColor(c);
+		drawLine(x1, y1, x2, y2, colors[0], colors[1], colors[2]);
+	}
+
+	public static void drawLine(float x1, float y1, float x2, float y2, float r, float g, float b) {
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glPushMatrix();
+		
+		GL11.glColor3f(r, g, b);
+		GL11.glBegin(GL11.GL_LINES);
+
+		GL11.glVertex2d(x1, y1);
+		GL11.glVertex2d(x2, y2);
+
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	    GL11.glPopAttrib();
+	}
+
 	public void updateViewport(int windowW, int windowH) {
 		float scaleX = windowW / camera.width;
 	    float scaleY = windowH / camera.height;
@@ -240,6 +277,9 @@ public class Renderer {
 	    GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT);
 	    GL11.glEnable(GL11.GL_TEXTURE_2D);
 	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, font);
+	    
+	    // default to white
+	    GL11.glColor3f(1f, 1f, 1f);
 
 	    GL11.glBegin(GL11.GL_QUADS);
 	    glTexCoord2f(u, v);                 glVertex2f(x, y);
