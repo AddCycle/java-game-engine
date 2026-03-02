@@ -1,6 +1,7 @@
 package engine.world.level;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 import org.lwjgl.glfw.GLFW;
 
 import engine.core.Engine;
+import engine.core.Logger;
 import engine.entities.movement.Direction;
 import engine.graphics.Renderer;
 import engine.inputs.Inputs;
@@ -19,58 +21,101 @@ import engine.world.level.view.LevelView;
  */
 public class WorldMap {
 	private Engine engine;
-	Map<String, LevelNode> nodes = new HashMap<>();
-	Map<String, LevelView> views = new HashMap<>();
-	private int x = 100;
-	private int y = 0;
+	private int startX = 50;
+	private int startY = 50;
 	private int width = 100;
 	private int height = 100;
-	private int nodeW = 16;
-	private int nodeH = 16;
-	private int spacing = nodeW * 4;
+	private int nodeWidth = 16;
+	private int nodeHeight = 16;
+	private int nodeSpacing = nodeWidth * 2;
 
+	Map<String, LevelNode> nodes = new HashMap<>();
+	Map<String, LevelView> views = new HashMap<>();
 	private String currentNodeId;
 
-	// FIXME : temp test
 	public void create(Engine engine) {
 		this.engine = engine;
 
-		nodes.put("level1", new LevelNode(true, "level2", "level3"));
-		nodes.put("level2", new LevelNode(true, "level1"));
+		addNode("1", new Point(0, 0), true, "2", "3");
+		addNode("2", new Point(1, 0), true, "1");
+		addNode("3", new Point(0, 1), true, "1", "4", "5");
+		addNode("4", new Point(0, 2), true, "3");
+		addNode("5", new Point(3, 1), true, "3");
 
-		nodes.put("level3", new LevelNode(true, "level1", "level4", "level5"));
-		nodes.put("level4", new LevelNode(true, "level3"));
-		nodes.put("level5", new LevelNode(true, "level3"));
+		currentNodeId = "1";
+	}
 
-		currentNodeId = "level1";
+	/**
+	 * Add an unlocked level node to the worldMap
+	 * 
+	 * @param id
+	 * @param position
+	 * @param neighborsIds
+	 */
+	protected void addNode(String id, Point position, String... neighborsIds) {
+		nodes.put(id, new LevelNode(false, neighborsIds));
+		views.put(id, new LevelView(position.x, position.y));
+	}
 
-		views.put("level1", new LevelView(0, 0));
-		views.put("level2", new LevelView(1, 0));
-		views.put("level3", new LevelView(0, 1));
-		views.put("level4", new LevelView(0, 2));
-		views.put("level5", new LevelView(3, 1));
+	/**
+	 * Add a level node to the worldMap with parameters
+	 * 
+	 * @param id
+	 * @param position
+	 * @param unlocked
+	 * @param neighborsIds
+	 */
+	protected void addNode(String id, Point position, boolean unlocked, String... neighborsIds) {
+		nodes.put(id, new LevelNode(unlocked, neighborsIds));
+		views.put(id, new LevelView(position.x, position.y));
 	}
 
 	public void update() {
-		Inputs input = engine.getInput();
+		views.values().forEach(v -> v.hovered = false);
 
-		if (input.isKeyJustPressed(GLFW.GLFW_KEY_RIGHT))
+		if (isActionJustPressed(GLFW.GLFW_KEY_RIGHT, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT)
+				|| isAxisJustPressed(Direction.RIGHT))
 			move(Direction.RIGHT);
-		else if (input.isKeyJustPressed(GLFW.GLFW_KEY_LEFT))
+		else if (isActionJustPressed(GLFW.GLFW_KEY_LEFT, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
+				|| isAxisJustPressed(Direction.LEFT))
 			move(Direction.LEFT);
-		else if (input.isKeyJustPressed(GLFW.GLFW_KEY_UP))
+		else if (isActionJustPressed(GLFW.GLFW_KEY_UP, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP)
+				|| isAxisJustPressed(Direction.UP))
 			move(Direction.UP);
-		else if (input.isKeyJustPressed(GLFW.GLFW_KEY_DOWN))
+		else if (isActionJustPressed(GLFW.GLFW_KEY_DOWN, GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN)
+				|| isAxisJustPressed(Direction.DOWN))
 			move(Direction.DOWN);
+
+		Point mouse = engine.getInput().getMousePos();
+
+		// Check hover for each node
+		for (Entry<String, LevelView> e : views.entrySet()) {
+			LevelNode n = nodes.get(e.getKey());
+			LevelView v = e.getValue();
+			int nodeX = startX + v.x * (nodeWidth + nodeSpacing);
+			int nodeY = startY + v.y * (nodeHeight + nodeSpacing);
+
+			if (mouse.x >= nodeX && mouse.x <= nodeX + nodeWidth && mouse.y >= nodeY && mouse.y <= nodeY + nodeHeight) {
+				v.hovered = true;
+				if (engine.getInput().isMouseButtonJustPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+				{
+					Logger.info("Clicked node: %s", e.getKey());
+					break;
+				}
+			}
+		}
 	}
 
 	public void render(Renderer r) {
+		r.drawTextCentered(currentNodeId, engine.getCamera().width / 2,
+				Renderer.calculateTextDimensions(currentNodeId)[1]);
+
 		for (Entry<String, LevelView> e : views.entrySet()) {
 			String nodeId = e.getKey();
 			LevelView v = e.getValue();
 
-			int x1 = x + v.x * (nodeW + spacing);
-			int y1 = y + v.y * (nodeH + spacing);
+			int x1 = startX + v.x * (nodeWidth + nodeSpacing);
+			int y1 = startY + v.y * (nodeHeight + nodeSpacing);
 
 			// draw connections
 			for (String neighborId : nodes.get(nodeId).neighbors) {
@@ -78,10 +123,11 @@ public class WorldMap {
 				if (nv == null)
 					continue;
 
-				int x2 = x + nv.x * (nodeW + spacing);
-				int y2 = y + nv.y * (nodeH + spacing);
+				int x2 = startX + nv.x * (nodeWidth + nodeSpacing);
+				int y2 = startY + nv.y * (nodeHeight + nodeSpacing);
 
-				Renderer.drawLine(x1 + nodeW / 2, y1 + nodeH / 2, x2 + nodeW / 2, y2 + nodeH / 2, Color.green);
+				Renderer.drawLine(x1 + nodeWidth / 2, y1 + nodeHeight / 2, x2 + nodeWidth / 2, y2 + nodeHeight / 2,
+						Color.green);
 			}
 		}
 
@@ -89,13 +135,15 @@ public class WorldMap {
 			String nodeId = e.getKey();
 			LevelView v = e.getValue();
 
-			int x1 = x + v.x * (nodeW + spacing);
-			int y1 = y + v.y * (nodeH + spacing);
+			int x1 = startX + v.x * (nodeWidth + nodeSpacing);
+			int y1 = startY + v.y * (nodeHeight + nodeSpacing);
 
 			LevelNode current = nodes.get(currentNodeId);
 
 			Color color;
-			if (nodeId.equalsIgnoreCase(currentNodeId)) {
+			if (v.hovered) {
+				color = Color.cyan;
+			} else if (nodeId.equalsIgnoreCase(currentNodeId)) {
 				color = Color.green;
 			} else if (nodes.get(nodeId).unlocked) {
 				color = Color.blue;
@@ -104,9 +152,12 @@ public class WorldMap {
 			}
 
 			// draw nodes
-			Renderer.drawRect(x1, y1, nodeW, nodeH, color);
-			r.drawTextCentered(nodeId, x1 + nodeW / 2, y1 + nodeH / 2, 8, 8);
+			Renderer.drawRect(x1, y1, nodeWidth, nodeHeight, color);
+			r.drawTextCentered(nodeId, x1 + nodeWidth / 2, y1 + nodeHeight / 2, 8, 8);
 		}
+
+		Point m = engine.getInput().getMousePos();
+		Renderer.drawRect(m.x - 2, m.y - 2, 4, 4, Color.red);
 	}
 
 	public void moveTo(String targetId) {
@@ -146,5 +197,20 @@ public class WorldMap {
 				return;
 			}
 		}
+	}
+
+	private boolean isActionJustPressed(int keyboard, int gamepad) {
+		Inputs input = engine.getInput();
+		return input.isKeyJustPressed(keyboard) || input.isPadButtonJustPressed(gamepad);
+	}
+
+	private boolean isAxisJustPressed(Direction dir) {
+		Inputs input = engine.getInput();
+		return input.isAxisJustPressed(dir);
+	}
+
+	private boolean isActionDown(int keyboard, int gamepad) {
+		Inputs input = engine.getInput();
+		return input.isKeyDown(keyboard) || input.isPadButtonDown(gamepad);
 	}
 }

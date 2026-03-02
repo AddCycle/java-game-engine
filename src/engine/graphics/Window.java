@@ -12,6 +12,7 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import engine.core.Logger;
+import engine.ui.mouse.Cursors;
 
 public class Window {
 	private long windowId;
@@ -21,6 +22,8 @@ public class Window {
 	private String iconPath;
 	private boolean fullscreen;
 	private Renderer renderer;
+	private int framebufferW;
+	private int framebufferH;
 	
 	public Window(int width, int height, String title, String icon) {
 		this.width = width;
@@ -44,11 +47,20 @@ public class Window {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		renderer.updateViewport(width, height);
+		GLFW.glfwSetCursor(windowId, Cursors.ARROW_CURSOR);
 		GLFW.glfwShowWindow(windowId);
 
-		// resize callback
+		// framebuffer size callback
 		GLFW.glfwSetFramebufferSizeCallback(windowId, (_, width, height) -> {
+			framebufferW = width;
+		    framebufferH = height;
 		    renderer.updateViewport(width, height);
+		});
+		
+		// resize callback
+		GLFW.glfwSetWindowSizeCallback(windowId, (_, w, h) -> {
+		    this.width = w;
+		    this.height = h;
 		});
 
 		Logger.info("Window created successfully");
@@ -127,6 +139,7 @@ public class Window {
 	}
 	
 	public void destroy() {
+		Cursors.destroyAll();
 		GLFW.glfwDestroyWindow(windowId);
 	}
 
@@ -140,5 +153,21 @@ public class Window {
 
 	public boolean isFullscreen() {
 		return fullscreen;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getFrameBufferWidth() {
+		return framebufferW;
+	}
+
+	public int getFrameBufferHeight() {
+		return framebufferH;
 	}
 }

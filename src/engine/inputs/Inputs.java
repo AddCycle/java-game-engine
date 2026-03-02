@@ -11,24 +11,33 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 
+import java.awt.Point;
 import java.nio.FloatBuffer;
 import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWGamepadState;
 
+import engine.core.Engine;
 import engine.core.Logger;
+import engine.entities.movement.Direction;
+import engine.world.Camera;
 import imgui.glfw.ImGuiImplGlfw;
 
 public class Inputs {
+	private Engine engine;
 	private long window;
 
 	private boolean[] prevKeys = new boolean[GLFW.GLFW_KEY_LAST];
 	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+	private boolean[] prevMouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	private boolean[] mouseButtons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
 	
 	private boolean[] padButtons = new boolean[GLFW.GLFW_GAMEPAD_BUTTON_LAST+1];
 	private boolean[] prevPadButtons = new boolean[GLFW.GLFW_GAMEPAD_BUTTON_LAST+1];
+	
+	private boolean axisLeft, axisRight, axisUp, axisDown;
+	private boolean prevAxisLeft, prevAxisRight, prevAxisUp, prevAxisDown;
 
 	private double mouseX, mouseY;
 
@@ -59,8 +68,9 @@ public class Inputs {
 		    "DPAD_LEFT"  // 14
 		};
 
-	public Inputs(long window, ImGuiImplGlfw imgui) {
-		this.window = window;
+	public Inputs(Engine engine, ImGuiImplGlfw imgui) {
+		this.engine = engine;
+		this.window = engine.getWindow().getId();
 		this.imgui = imgui;
 
 		setCallbacks();
@@ -108,7 +118,6 @@ public class Inputs {
 			imgui.cursorPosCallback(window, xpos, ypos);
 			mouseX = xpos;
 			mouseY = ypos;
-//			Logger.debug("mouseX,mouseY: %f, %f", mouseX, mouseY);
 		});
 	}
 	
@@ -135,10 +144,19 @@ public class Inputs {
 	}
 
 	public void update() {
+		prevAxisLeft  = axisLeft;
+	    prevAxisRight = axisRight;
+	    prevAxisUp    = axisUp;
+	    prevAxisDown  = axisDown;
 
 		// keys
 	    for (int i = 0; i < keys.length; i++) {
 	        prevKeys[i] = keys[i]; // store state for next frame
+	    }
+
+		// mouseButtons
+	    for (int i = 0; i < mouseButtons.length; i++) {
+	        prevMouseButtons[i] = mouseButtons[i];
 	    }
 	    
 	    // gamepad
@@ -147,6 +165,16 @@ public class Inputs {
 	    }
 	    
 	    pollGamepad(GLFW.GLFW_JOYSTICK_1);
+	    
+	    float x = getControllerAxis(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_X);
+	    float y = getControllerAxis(GLFW.GLFW_JOYSTICK_1, GLFW.GLFW_GAMEPAD_AXIS_LEFT_Y);
+
+	    float DEAD = 0.5f;
+
+	    axisLeft  = x < -DEAD;
+	    axisRight = x >  DEAD;
+	    axisUp    = y < -DEAD;
+	    axisDown  = y >  DEAD;
 	}
 
 	// Keyboard query
@@ -161,6 +189,10 @@ public class Inputs {
 	// Mouse query
 	public boolean isMouseButtonDown(int button) {
 		return mouseButtons[button];
+	}
+
+	public boolean isMouseButtonJustPressed(int button) {
+		return mouseButtons[button] && !prevMouseButtons[button];
 	}
 
 	public double getMouseX() {
@@ -193,5 +225,82 @@ public class Inputs {
 			}
 		}
 		return 0f;
+	}
+	
+	public boolean isAxisJustPressed(Direction dir) {
+	    return switch (dir) {
+	        case LEFT  -> axisLeft  && !prevAxisLeft;
+	        case RIGHT -> axisRight && !prevAxisRight;
+	        case UP    -> axisUp    && !prevAxisUp;
+	        case DOWN  -> axisDown  && !prevAxisDown;
+	    };
+	}
+
+	/**
+	 * returns currentMousePosition inside the Window
+	 * 
+	 * @return Point(mouseX,mouseY);
+	 */
+	public Point getMousePos() {
+	    Inputs input = engine.getInput();
+	    Camera camera = engine.getCamera();
+
+	    double mouseX = input.getMouseX();
+	    double mouseY = input.getMouseY();
+
+	    int winW = engine.getWindow().getWidth();
+	    int winH = engine.getWindow().getHeight();
+
+	    float scale = Math.min(
+	        (float) winW / camera.width,
+	        (float) winH / camera.height
+	    );
+
+	    int viewW = (int)(camera.width * scale);
+	    int viewH = (int)(camera.height * scale);
+
+	    int offsetX = (winW - viewW) / 2;
+	    int offsetY = (winH - viewH) / 2;
+
+	    // Convert to world space
+	    double worldX = (mouseX - offsetX) / scale;
+	    double worldY = (mouseY - offsetY) / scale;
+
+	    return new Point((int) worldX, (int) worldY);
+	}
+	
+	private void debugMouse() {
+	    Inputs input = engine.getInput();
+	    Camera camera = engine.getCamera();
+
+	    double mouseX = input.getMouseX();
+	    double mouseY = input.getMouseY();
+
+	    int winW = engine.getWindow().getWidth();
+	    int winH = engine.getWindow().getHeight();
+
+	    float scale = Math.min(
+	        (float) winW / camera.width,
+	        (float) winH / camera.height
+	    );
+
+	    int viewW = (int)(camera.width * scale);
+	    int viewH = (int)(camera.height * scale);
+
+	    int offsetX = (winW - viewW) / 2;
+	    int offsetY = (winH - viewH) / 2;
+
+	    double worldX = (mouseX - offsetX) / scale;
+	    double worldY = (mouseY - offsetY) / scale;
+
+	    Logger.info("----- MOUSE DEBUG -----");
+	    Logger.info("mouse raw   : %.2f , %.2f", mouseX, mouseY);
+	    Logger.info("window      : %d x %d", winW, winH);
+	    Logger.info("camera      : %.2f x %.2f", camera.width, camera.height);
+	    Logger.info("scale       : %.4f", scale);
+	    Logger.info("viewport    : %d x %d", viewW, viewH);
+	    Logger.info("offset      : %d , %d", offsetX, offsetY);
+	    Logger.info("world       : %.2f , %.2f", worldX, worldY);
+	    Logger.info("------------------------");
 	}
 }

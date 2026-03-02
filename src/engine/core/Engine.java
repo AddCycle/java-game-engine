@@ -71,7 +71,7 @@ public class Engine {
 		if (fullscreen)
 			window.setFullScreen(true);
 
-		inputs = new Inputs(window.getId(), imgui.getImGuiGlfw());
+		inputs = new Inputs(this, imgui.getImGuiGlfw());
 
 		game.init();
 	}

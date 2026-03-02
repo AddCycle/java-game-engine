@@ -201,6 +201,17 @@ public class Renderer {
 		drawText(text, x, y1, charW, charH);
 	}
 
+	public void drawTextCentered(String text, float x, float y) {
+		int charW = getDefaultCharWidth();
+		int charH = getDefaultCharHeight();
+		float textW = text.length() * charW;
+
+		float x1 = x - textW / 2f;
+		float y1 = y - charH / 2f;
+		
+		drawText(text, x1, y1, charW, charH);
+	}
+
 	public void drawTextCentered(String text, float x, float y, int charW, int charH) {
 		float textW = text.length() * charW;
 
@@ -222,13 +233,11 @@ public class Renderer {
 
 		drawText(text, x, y, charW, charH);
 	}
-	
-	/* End of moving */
 
 	public void drawText(String text, float x, float y) {
 	    float startX = x;
-	    int charW = 8;
-	    int charH = 8;
+	    int charW = getDefaultCharWidth();
+	    int charH = getDefaultCharHeight();
 
 	    for (char c : text.toCharArray()) {
 	        if (c == '\n') {

@@ -15,6 +15,7 @@ public class ImGuiLayer {
 
 		ImGuiIO io = ImGui.getIO();
 		io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+		io.addConfigFlags(ImGuiConfigFlags.NoMouseCursorChange);
 //        io.getFonts().addFontFromFileTTF("resources/fonts/Roboto-Regular.ttf", 18f);
 //        io.getFonts().build();
 		ImGui.getIO().setFontGlobalScale(1.5f);
